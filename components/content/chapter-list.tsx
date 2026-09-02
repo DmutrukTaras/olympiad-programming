@@ -1,16 +1,28 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { LevelBadge } from '@/components/content/level-badge';
+import { cn } from '@/lib/utils';
 import type { Chapter } from '@/types/content';
 
-export function ChapterList({ chapters }: { chapters: Chapter[] }) {
+export function ChapterList({
+  chapters,
+  showLevel = true,
+}: {
+  chapters: Chapter[];
+  showLevel?: boolean;
+}) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card">
       {chapters.map((chapter) => (
         <Link
           key={chapter.id}
           href={`/chapters/${chapter.slug}`}
-          className="group grid gap-3 border-b border-border px-5 py-5 transition-colors last:border-b-0 hover:bg-muted/55 sm:grid-cols-[2.6rem_minmax(0,1fr)_auto] sm:items-start sm:gap-4"
+          className={cn(
+            'group grid gap-3 border-b border-border px-5 py-5 transition-colors last:border-b-0 hover:bg-muted/55 sm:items-start sm:gap-4',
+            showLevel
+              ? 'sm:grid-cols-[2.6rem_minmax(0,1fr)_auto]'
+              : 'sm:grid-cols-[2.6rem_minmax(0,1fr)]',
+          )}
         >
           <span className="pt-1 font-mono text-xs text-muted-foreground">
             {String(chapter.order).padStart(2, '0')}
@@ -24,9 +36,11 @@ export function ChapterList({ chapters }: { chapters: Chapter[] }) {
               {chapter.summary}
             </span>
           </span>
-          <span className="self-center sm:self-start">
-            <LevelBadge level={chapter.level} compact />
-          </span>
+          {showLevel ? (
+            <span className="self-center sm:self-start">
+              <LevelBadge level={chapter.level} compact />
+            </span>
+          ) : null}
         </Link>
       ))}
     </div>
