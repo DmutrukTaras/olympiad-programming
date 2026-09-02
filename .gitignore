@@ -30,3 +30,18 @@ yarn-error.log*
 
 # generated files
 next-env.d.ts
+/.vinext/
+
+# local AI assistant files
+/AGENTS.md
+/CLAUDE.md
+/.agents/
+/.codex/
+/.openai/
+/.claude/
+/.cursor/
+/.cursorignore
+/.windsurf/
+/.continue/
+/.aider*
+/.github/copilot-instructions.md
