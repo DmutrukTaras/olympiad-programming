@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "oxlint",
+    "test": "node --import ./scripts/register-typescript.mjs --test tests/content.test.ts",
     "format": "oxfmt"
   },
   "dependencies": {

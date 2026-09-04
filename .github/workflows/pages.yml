@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check content and templates
+        run: npm test
+
       - name: Build static site
         run: npm run build
         env:

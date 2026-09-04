@@ -15,7 +15,8 @@ export const levels: Record<
   foundation: {
     number: 1,
     label: 'Foundation',
-    description: 'Базові прийоми, реалізація та алгоритмічне мислення.',
+    description:
+      '4 глави · 12 патернів · 36 авторських задач. Перетворюємо умову на простий алгоритм і вчимося оцінювати складність.',
   },
   core: {
     number: 2,
@@ -35,6 +36,7 @@ export const levels: Record<
   challenge: {
     number: 5,
     label: 'Challenge',
-    description: 'Задачі, де алгоритм потрібно відкрити через переформулювання.',
+    description:
+      'Задачі, де алгоритм потрібно відкрити через переформулювання.',
   },
 };

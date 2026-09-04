@@ -7,11 +7,41 @@ export type LevelId =
 
 export type TaskKind = 'learning' | 'practice';
 
+export interface PatternOutline {
+  id: string;
+  title: string;
+  parts?: { id: string; title: string }[];
+}
+
+export interface ChapterOutline {
+  mainPatterns: PatternOutline[];
+  additionalTopics: string[];
+  optionalTopics: string[];
+}
+
 export type ContentBlock =
+  | { type: 'visual'; kind: FoundationVisualKind }
+  | { type: 'table'; columns: string[]; rows: string[][] }
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
   | { type: 'callout'; title: string; text: string }
   | { type: 'code'; language: 'cpp' | 'text'; code: string; caption?: string };
+
+export type FoundationVisualKind =
+  | 'scan'
+  | 'robot'
+  | 'sorting'
+  | 'prefix'
+  | 'difference'
+  | 'grid'
+  | 'cycle'
+  | 'invariant';
+
+export interface TaskExample {
+  input: string;
+  output: string;
+  explanation?: string;
+}
 
 export interface Chapter {
   id: string;
@@ -22,7 +52,7 @@ export interface Chapter {
   level: LevelId;
   prerequisiteIds: string[];
   taskTypes: string[];
-  patternIds: string[];
+  outline?: ChapterOutline;
   takeaways: string[];
   hasContent: boolean;
 }
@@ -36,36 +66,65 @@ export interface Pattern {
   description: string;
   recognitionSigns: string[];
   constraintSignals: string[];
+  notApplicableSigns: string[];
   theory: ContentBlock[];
-  taskIds: string[];
+  practiceStatus: 'planned' | 'complete';
   hasContent: boolean;
 }
 
+export type LearningStageId =
+  | 'try-yourself'
+  | 'hint'
+  | 'brute-force'
+  | 'why-slow'
+  | 'observation'
+  | 'algorithm'
+  | 'proof'
+  | 'complexity'
+  | 'solution'
+  | 'takeaway';
+
 export interface TaskStage {
-  id: string;
+  id: LearningStageId;
   title: string;
   blocks: ContentBlock[];
 }
 
-export interface Task {
+interface TaskBase {
   id: string;
   slug: string;
   title: string;
-  kind: TaskKind;
+  status: 'draft' | 'published';
   level: LevelId;
   patternIds: string[];
   statement: string[];
   input: string;
   output: string;
   constraints: string[];
+  examples?: TaskExample[];
+  hint?: string;
   stages: TaskStage[];
-  externalUrl?: string;
   hasEditorial: boolean;
 }
+
+export type LearningProblem = TaskBase & {
+  kind: 'learning';
+  source: 'author';
+  externalUrl?: never;
+};
+
+export type PracticeProblem = TaskBase & {
+  kind: 'practice';
+  source: 'author' | 'algotester';
+  externalUrl?: string;
+};
+
+export type Task = LearningProblem | PracticeProblem;
 
 export interface ProblemTypeGroup {
   id: string;
   title: string;
   description: string;
+  topics: string[];
   chapterIds: string[];
 }

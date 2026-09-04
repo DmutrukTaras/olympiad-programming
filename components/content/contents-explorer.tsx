@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Layers3, Shapes } from 'lucide-react';
 import { ChapterList } from '@/components/content/chapter-list';
@@ -19,12 +19,23 @@ export function ContentsExplorer({
   chapters: Chapter[];
   groups: ProblemTypeGroup[];
 }) {
-  const [mode, setMode] = useState<ViewMode>('difficulty');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const mode: ViewMode =
+    searchParams.get('view') === 'type' ? 'type' : 'difficulty';
   const reduceMotion = useReducedMotion();
 
   return (
     <div>
-      <Tabs value={mode} onValueChange={(value) => setMode(value as ViewMode)}>
+      <Tabs
+        value={mode}
+        onValueChange={(value) =>
+          router.replace(
+            `/contents?view=${value === 'type' ? 'type' : 'difficulty'}`,
+            { scroll: false },
+          )
+        }
+      >
         <TabsList className="h-auto w-full rounded-xl border border-border bg-card p-1 sm:w-auto">
           <TabsTrigger value="difficulty" className="h-9 px-3 sm:px-4">
             <Layers3 data-icon="inline-start" />
@@ -36,6 +47,11 @@ export function ContentsExplorer({
           </TabsTrigger>
         </TabsList>
       </Tabs>
+
+      <p className="mt-5 text-sm leading-6 text-muted-foreground">
+        Два маршрути до тих самих матеріалів. Вступ залишається спільним для
+        обох режимів.
+      </p>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
@@ -49,7 +65,9 @@ export function ContentsExplorer({
           {mode === 'difficulty' ? (
             <div className="space-y-16">
               {levelOrder.map((level) => {
-                const items = chapters.filter((chapter) => chapter.level === level);
+                const items = chapters.filter(
+                  (chapter) => chapter.level === level,
+                );
                 const meta = levels[level];
 
                 return (
@@ -57,9 +75,15 @@ export function ContentsExplorer({
                     <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                       <div>
                         <LevelBadge level={level} />
-                        <h2 id={`level-${level}`} className="mt-3 text-2xl font-semibold tracking-tight">
+                        <h2
+                          id={`level-${level}`}
+                          className="mt-3 text-2xl font-semibold tracking-tight"
+                        >
                           {meta.label}
                         </h2>
+                        <p className="mt-2 font-mono text-xs text-muted-foreground">
+                          Глави {items[0]?.order}–{items.at(-1)?.order}
+                        </p>
                       </div>
                       <p className="max-w-lg text-sm leading-6 text-muted-foreground">
                         {meta.description}
@@ -72,18 +96,33 @@ export function ContentsExplorer({
             </div>
           ) : (
             <div className="grid gap-5 lg:grid-cols-2 lg:items-start">
-              {groups.map((group) => {
+              {groups.map((group, index) => {
                 const items = group.chapterIds
                   .map((id) => chapters.find((chapter) => chapter.id === id))
                   .filter((chapter): chapter is Chapter => Boolean(chapter));
 
                 return (
-                  <section key={group.id} className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+                  <section
+                    id={`type-${group.id}`}
+                    key={group.id}
+                    className="scroll-mt-28 rounded-2xl border border-border bg-card p-5 sm:p-6"
+                  >
                     <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
-                      {items.length} {items.length === 1 ? 'матеріал' : 'матеріалів'}
+                      Тип {String(index + 1).padStart(2, '0')} · Пов’язані
+                      глави: {items.length}
                     </p>
-                    <h2 className="mt-2 text-xl font-semibold tracking-tight">{group.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{group.description}</p>
+                    <h2 className="mt-2 text-xl font-semibold tracking-tight">
+                      {group.title}
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {group.description}
+                    </p>
+                    <p className="mt-4 text-xs leading-6 text-muted-foreground">
+                      <span className="font-semibold text-foreground">
+                        Теми:{' '}
+                      </span>
+                      {group.topics.join(' · ')}
+                    </p>
                     <div className="mt-5 divide-y divide-border border-y border-border">
                       {items.map((chapter) => (
                         <Link

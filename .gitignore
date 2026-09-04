@@ -30,6 +30,7 @@ yarn-error.log*
 
 # generated files
 next-env.d.ts
+*.tsbuildinfo
 /.vinext/
 
 # local AI assistant files
