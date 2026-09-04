@@ -1,9 +1,13 @@
 import type { Pattern } from '@/types/content';
 import { chapters } from '@/content/chapters';
 import { foundationPatterns } from '@/content/foundation';
+import { foundationPreparation } from '@/content/foundation/preparation';
 
 const publishedPatterns: Record<string, Pattern> = Object.fromEntries(
-  foundationPatterns.map((pattern) => [pattern.id, pattern]),
+  foundationPatterns.map((pattern) => [
+    pattern.id,
+    { ...pattern, preparation: foundationPreparation[pattern.id] },
+  ]),
 );
 
 // Drafts come from the chapter outline, so navigation cannot drift away from it.

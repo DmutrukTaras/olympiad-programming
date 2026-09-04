@@ -4,6 +4,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { chapters, patterns, problemTypeGroups, tasks } from '@/content';
 import { chapterOutlines } from '@/content/chapter-outlines';
+import { foundationPreparation } from '@/content/foundation/preparation';
 import {
   createLearningStages,
   learningStageDefinitions,
@@ -15,11 +16,63 @@ import {
   getTasksForPattern,
 } from '@/lib/content-selectors';
 import { LearningTask } from '@/components/content/learning-task';
+import { PatternPreparation } from '@/components/content/pattern-preparation';
 import { PracticeTaskCard } from '@/components/content/practice-task-card';
 import type { PracticeProblem } from '@/types/content';
 
 const unique = (items: string[]) =>
   assert.equal(new Set(items).size, items.length);
+
+await test('every Foundation pattern has beginner preparation with C++ examples and two self-checks', () => {
+  const foundation = patterns.filter(
+    (pattern) => pattern.level === 'foundation',
+  );
+  assert.deepEqual(
+    Object.keys(foundationPreparation).sort(),
+    foundation.map((pattern) => pattern.id).sort(),
+  );
+  for (const pattern of foundation) {
+    const preparation = pattern.preparation;
+    assert.ok(preparation, pattern.id);
+    assert.ok(preparation.introduction.trim(), pattern.id);
+    assert.ok(preparation.sections.length >= 3, pattern.id);
+    unique(preparation.sections.map((section) => section.title));
+    for (const section of preparation.sections) {
+      assert.ok(section.title.trim() && section.blocks.length > 0);
+    }
+    const blocks = preparation.sections.flatMap((section) => section.blocks);
+    assert.ok(
+      blocks.some(
+        (block) =>
+          block.type === 'code' &&
+          block.language === 'cpp' &&
+          block.code.trim(),
+      ),
+    );
+    assert.ok(blocks.some((block) => block.type === 'table'));
+    assert.ok(blocks.some((block) => block.type === 'callout'));
+    assert.equal(preparation.questions.length, 2);
+    assert.ok(
+      preparation.questions.every(
+        ({ question, answer }) => question.trim() && answer.trim(),
+      ),
+    );
+  }
+});
+
+await test('preparation and its self-check answers are collapsed by default without client state', () => {
+  for (const content of Object.values(foundationPreparation)) {
+    const html = renderToStaticMarkup(
+      createElement(PatternPreparation, { content }),
+    );
+    assert.ok(html.includes('id="preparation"'));
+    assert.ok(html.includes('Теорія та інструменти C++'));
+    const details = html.match(/<details\b[^>]*>/g) ?? [];
+    assert.equal(details.length, 1 + content.questions.length);
+    for (const tag of details) assert.doesNotMatch(tag, /\sopen(?:\s|=|>)/);
+    assert.equal((html.match(/<summary\b/g) ?? []).length, details.length);
+  }
+});
 
 await test('Foundation has exactly 12 complete patterns, each with one lesson and two hinted practice tasks', () => {
   const foundation = patterns.filter(
@@ -248,7 +301,9 @@ await test('learning template shows statement and first step without rendering l
   );
   assert.ok(task?.kind === 'learning');
   const html = renderToStaticMarkup(createElement(LearningTask, { task }));
-  const statementHtml = renderToStaticMarkup(createElement('span', null, task.statement[0])).slice(6, -7);
+  const statementHtml = renderToStaticMarkup(
+    createElement('span', null, task.statement[0]),
+  ).slice(6, -7);
   assert.ok(html.includes(statementHtml));
   assert.ok(html.includes('Constraints'));
   assert.ok(html.includes('Спробуй сам'));

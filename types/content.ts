@@ -57,6 +57,12 @@ export interface Chapter {
   hasContent: boolean;
 }
 
+export interface PatternPreparation {
+  introduction: string;
+  sections: { title: string; blocks: ContentBlock[] }[];
+  questions: { question: string; answer: string }[];
+}
+
 export interface Pattern {
   id: string;
   slug: string;
@@ -67,6 +73,7 @@ export interface Pattern {
   recognitionSigns: string[];
   constraintSignals: string[];
   notApplicableSigns: string[];
+  preparation?: PatternPreparation;
   theory: ContentBlock[];
   practiceStatus: 'planned' | 'complete';
   hasContent: boolean;

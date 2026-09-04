@@ -12,6 +12,7 @@ import {
 import { ContentBlocks } from '@/components/content/content-blocks';
 import { LearningTask } from '@/components/content/learning-task';
 import { LevelBadge } from '@/components/content/level-badge';
+import { PatternPreparation } from '@/components/content/pattern-preparation';
 import { PracticeTaskCard } from '@/components/content/practice-task-card';
 import { chapters, patterns } from '@/content';
 import { practiceTaskRange } from '@/content/task-template';
@@ -78,6 +79,11 @@ export default async function PatternPage({ params }: PatternPageProps) {
             <a href="#overview" className="article-nav-link">
               Огляд
             </a>
+            {pattern.preparation && (
+              <a href="#preparation" className="article-nav-link">
+                Теорія та інструменти C++
+              </a>
+            )}
             <a href="#task" className="article-nav-link">
               Навчальна задача
             </a>
@@ -91,7 +97,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
               Коли НЕ підходить
             </a>
             <a href="#theory" className="article-nav-link">
-              Теорія та шаблон
+              Підсумок та шпаргалка
             </a>
             <a href="#practice" className="article-nav-link">
               Практика
@@ -133,6 +139,10 @@ export default async function PatternPage({ params }: PatternPageProps) {
               {pattern.description}
             </p>
           </header>
+
+          {pattern.preparation && (
+            <PatternPreparation content={pattern.preparation} />
+          )}
 
           {learningTask && (
             <section
@@ -217,7 +227,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
           >
             <p className="eyebrow">Після власної спроби</p>
             <h2 className="mt-4 text-2xl font-semibold tracking-tight">
-              Теорія та C++ шаблон
+              Підсумок та C++ шпаргалка
             </h2>
             <details className="mt-6 rounded-2xl border border-border bg-card p-5">
               <summary className="cursor-pointer font-semibold">
