@@ -38,15 +38,26 @@ type CorePatternInput = Pick<
   | 'extensions'
 > & { cppNotes: ContentBlock[] };
 
-export function pattern({ cppNotes, ...meta }: CorePatternInput): Pattern {
+type CorePatternWithPreparation = CorePatternInput & {
+  knowledge: ContentBlock[];
+};
+
+export function pattern({
+  cppNotes,
+  knowledge,
+  ...meta
+}: CorePatternWithPreparation): Pattern {
   return {
     ...meta,
     slug: meta.id,
     level: 'core',
     preparation: {
       introduction:
-        'Короткі implementation notes для цього патерну. Основну ідею спершу зрозумій на схемі вище; цей блок відкривай, коли потрібен точний C++17-шаблон або нагадування про межі.',
-      sections: [{ title: 'C++17: базовий шаблон і пастки', blocks: cppNotes }],
+        'Цей блок допомагає швидко відновити саме ті поняття, які потрібні для патерну. Його можна пропустити, якщо терміни та операції нижче вже впевнено знайомі.',
+      sections: [
+        { title: 'Необхідна теорія простими словами', blocks: knowledge },
+        { title: 'C++17: операції, шаблон і пастки', blocks: cppNotes },
+      ],
       questions: [],
     },
     practiceStatus: 'complete',

@@ -69,7 +69,7 @@ await test('preparation and its self-check answers are collapsed by default with
       createElement(PatternPreparation, { content }),
     );
     assert.ok(html.includes('id="preparation"'));
-    assert.ok(html.includes('C++ / implementation notes'));
+    assert.ok(html.includes('Теорія та C++: заповнити прогалини'));
     const details = html.match(/<details\b[^>]*>/g) ?? [];
     assert.equal(details.length, 1 + content.questions.length);
     for (const tag of details) assert.doesNotMatch(tag, /\sopen(?:\s|=|>)/);
@@ -124,6 +124,12 @@ await test('Core has 12 complete patterns, 36 tasks and collapsible implementati
     assert.ok(pattern.intuition?.length, pattern.id);
     assert.ok(pattern.priorKnowledge?.length, pattern.id);
     assert.ok(pattern.preparation, pattern.id);
+    assert.ok(pattern.preparation!.sections.length >= 2, pattern.id);
+    assert.equal(
+      pattern.preparation!.sections[0].title,
+      'Необхідна теорія простими словами',
+    );
+    assert.ok(pattern.preparation!.sections[0].blocks.length >= 2, pattern.id);
     assert.equal(pattern.preparation?.questions.length, 0);
     const html = renderToStaticMarkup(
       createElement(PatternPreparation, { content: pattern.preparation! }),

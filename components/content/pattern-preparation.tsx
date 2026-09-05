@@ -14,11 +14,11 @@ export function PatternPreparation({ content }: { content: Preparation }) {
             />
             <span className="min-w-0 flex-1">
               <span className="block text-lg font-semibold tracking-tight sm:text-xl">
-                C++ / implementation notes
+                Теорія та C++: заповнити прогалини
               </span>
               <span className="mt-2 block text-sm font-normal leading-6 text-muted-foreground">
-                Додатковий refresher: синтаксис, STL і типові помилки. Відкрий
-                за потреби; основна ідея патерну вже є вище.
+                Необов’язковий refresher потрібних понять, синтаксису, STL і
+                типових помилок. Відкрий, якщо щось у патерні ще незнайоме.
               </span>
             </span>
             <ChevronDown
@@ -30,7 +30,7 @@ export function PatternPreparation({ content }: { content: Preparation }) {
 
         <div className="space-y-9 border-t border-border p-5 sm:p-6">
           <div>
-            <p className="eyebrow">Перед першою спробою · C++17</p>
+            <p className="eyebrow">Перед першою спробою · база знань</p>
             <p className="mt-3 leading-7 text-muted-foreground">
               {content.introduction}
             </p>

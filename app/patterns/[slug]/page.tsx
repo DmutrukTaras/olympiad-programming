@@ -95,7 +95,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
             </a>
             {pattern.preparation && (
               <a href="#preparation" className="article-nav-link">
-                C++ / implementation notes
+                Теорія та C++
               </a>
             )}
             <a href="#task" className="article-nav-link">
