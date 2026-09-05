@@ -1,5 +1,6 @@
 import type { Pattern } from '@/types/content';
 import { chapters } from '@/content/chapters';
+import { combinationPatterns } from '@/content/combination';
 import { corePatterns } from '@/content/core';
 import { foundationPatterns } from '@/content/foundation';
 import { foundationPreparation } from '@/content/foundation/preparation';
@@ -11,6 +12,7 @@ const publishedPatterns: Record<string, Pattern> = Object.fromEntries(
       preparation: foundationPreparation[pattern.id],
     })),
     ...corePatterns,
+    ...combinationPatterns,
   ].map((pattern) => [pattern.id, pattern]),
 );
 

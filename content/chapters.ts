@@ -267,6 +267,15 @@ export const chapters: Chapter[] = [
     'Моделюємо зв’язки, маршрути та досяжність.',
     'combination',
     ['графи', 'маршрути'],
+    {
+      prerequisiteIds: ['ch-04', 'ch-13'],
+      takeaways: [
+        'Перетворювати клітинки, об’єкти та стани на вершини й ребра.',
+        'Вибирати shortest-path алгоритм за типом ваг.',
+        'Працювати із залежностями через DAG і topological order.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-15',
@@ -276,6 +285,15 @@ export const chapters: Chapter[] = [
     'Працюємо з ієрархіями, компонентами та каркасами.',
     'combination',
     ['дерева', 'компоненти'],
+    {
+      prerequisiteIds: ['ch-07', 'ch-14'],
+      takeaways: [
+        'Вкорінювати дерево й перетворювати піддерево на Euler-відрізок.',
+        'Підтримувати компоненти, що об’єднуються, через DSU.',
+        'Відрізняти MST від shortest path і будувати Kruskal.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-16',
@@ -285,6 +303,15 @@ export const chapters: Chapter[] = [
     'Зберігаємо відповіді для станів і будуємо переходи.',
     'combination',
     ['оптимізація', 'підрахунок способів'],
+    {
+      prerequisiteIds: ['ch-03', 'ch-08', 'ch-14', 'ch-15'],
+      takeaways: [
+        'Формулювати state реченням до запису transition.',
+        'Вибирати base cases, порядок обчислення та місце відповіді.',
+        'Переносити DP на рюкзак, таблицю, рядки, DAG і дерево.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-17',
@@ -294,6 +321,15 @@ export const chapters: Chapter[] = [
     'Обробляємо багато запитів і змін даних.',
     'combination',
     ['запити', 'оновлення'],
+    {
+      prerequisiteIds: ['ch-08', 'ch-13', 'ch-15'],
+      takeaways: [
+        'Вибирати структуру даних за точним набором update/query операцій.',
+        'Працювати з Fenwick і Segment Tree за O(log n).',
+        'Переформульовувати offline-запити через compression, порядок або рухоме вікно.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-18',

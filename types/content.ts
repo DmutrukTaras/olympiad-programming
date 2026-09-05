@@ -22,6 +22,7 @@ export interface ChapterOutline {
 export type ContentBlock =
   | { type: 'visual'; kind: FoundationVisualKind }
   | { type: 'core-visual'; kind: CoreVisualKind }
+  | { type: 'combination-visual'; kind: CombinationVisualKind }
   | { type: 'table'; columns: string[]; rows: string[][] }
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
@@ -47,6 +48,16 @@ export type CoreVisualKind =
   | 'brackets'
   | 'monotonic-stack'
   | 'monotonic-queue';
+
+export type CombinationVisualKind =
+  | 'graph-grid'
+  | 'shortest-paths'
+  | 'topological'
+  | 'euler-tour'
+  | 'dsu'
+  | 'kruskal'
+  | 'dp-grid'
+  | 'range-structures';
 
 export interface TaskExample {
   input: string;
@@ -82,6 +93,7 @@ export interface Pattern {
   level: LevelId;
   description: string;
   intuition?: ContentBlock[];
+  modeling?: ContentBlock[];
   priorKnowledge?: string[];
   recognitionSigns: string[];
   constraintSignals: string[];

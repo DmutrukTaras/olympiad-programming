@@ -84,6 +84,11 @@ export default async function PatternPage({ params }: PatternPageProps) {
                 Інтуїція та приклад
               </a>
             )}
+            {pattern.modeling && (
+              <a href="#modeling" className="article-nav-link">
+                Як змоделювати
+              </a>
+            )}
             <a href="#recognize" className="article-nav-link">
               Як розпізнати
             </a>
@@ -158,9 +163,26 @@ export default async function PatternPage({ params }: PatternPageProps) {
             </section>
           )}
 
+          {pattern.modeling && (
+            <section
+              id="modeling"
+              className="scroll-mt-28 border-b border-border py-10"
+            >
+              <p className="eyebrow">Від умови до структури</p>
+              <h2 className="mb-6 mt-4 text-2xl font-semibold tracking-tight">
+                Як змоделювати задачу
+              </h2>
+              <ContentBlocks blocks={pattern.modeling} />
+            </section>
+          )}
+
           {Boolean(pattern.priorKnowledge?.length) && (
             <aside className="mb-2 rounded-2xl border border-primary/20 bg-primary/[0.055] p-5">
-              <p className="font-semibold">Що вже використали з Foundation</p>
+              <p className="font-semibold">
+                {pattern.level === 'combination'
+                  ? 'Використані знання'
+                  : 'Що вже використали з Foundation'}
+              </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 {pattern.priorKnowledge?.join(' · ')}
               </p>

@@ -95,9 +95,9 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
   ),
   'ch-15': outline(
     [
-      pattern('dfs-subtrees', 'DFS і піддерева'),
-      pattern('aggregate-children', 'Накопичення інформації з дітей'),
-      pattern('dsu-mst', 'DSU / MST'),
+      pattern('rooted-tree-euler', 'Rooted Tree / Subtree / Euler Tour'),
+      pattern('dsu', 'DSU: компоненти, які змінюються'),
+      pattern('minimum-spanning-tree', 'Minimum Spanning Tree'),
     ],
     [
       'Euler Tour',
@@ -108,9 +108,9 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
   ),
   'ch-16': outline(
     [
-      pattern('dp-states-transitions', 'Стан і переходи DP'),
-      pattern('knapsack-sequence-dp', 'Knapsack та DP на послідовностях'),
-      pattern('grid-interval-tree-dp', 'Grid / Interval / Tree DP'),
+      pattern('sequence-dp', 'State / Transition / Sequence DP'),
+      pattern('knapsack-counting-dp', 'Knapsack та Counting DP'),
+      pattern('multidimensional-dp', 'Grid / String / Tree / DAG DP'),
     ],
     [
       'LIS',

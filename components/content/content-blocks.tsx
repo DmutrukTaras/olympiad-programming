@@ -1,6 +1,7 @@
 import { Lightbulb } from 'lucide-react';
 import { FoundationVisual } from '@/components/content/foundation-visuals';
 import { CoreVisual } from '@/components/content/core-visuals';
+import { CombinationVisual } from '@/components/content/combination-visuals';
 import { LessonTable } from '@/components/content/lesson-ui';
 import type { ContentBlock } from '@/types/content';
 
@@ -12,6 +13,8 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           return <FoundationVisual key={index} kind={block.kind} />;
         if (block.type === 'core-visual')
           return <CoreVisual key={index} kind={block.kind} />;
+        if (block.type === 'combination-visual')
+          return <CombinationVisual key={index} kind={block.kind} />;
         if (block.type === 'table')
           return (
             <LessonTable

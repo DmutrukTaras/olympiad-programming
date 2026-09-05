@@ -11,12 +11,12 @@ import {
 export const metadata: Metadata = {
   title: 'Задачі',
   description:
-    'Авторські навчальні та практичні задачі рівнів Foundation і Core.',
+    'Авторські навчальні та практичні задачі рівнів Foundation, Core і Combination.',
 };
 
 export default function TasksPage() {
   const publishedChapters = chapters.filter(
-    (chapter) => chapter.order >= 6 && chapter.order <= 13,
+    (chapter) => chapter.order >= 6 && chapter.order <= 17,
   );
   const publishedTasks = publishedChapters.flatMap((chapter) =>
     getPatternsForChapter(chapter.id).flatMap((pattern) =>
@@ -38,9 +38,10 @@ export default function TasksPage() {
         <div className="flex flex-wrap gap-2">
           <LevelBadge level="foundation" />
           <LevelBadge level="core" />
+          <LevelBadge level="combination" />
         </div>
         <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Задачі Foundation та Core
+          Задачі Foundation, Core та Combination
         </h1>
         <p className="mt-5 text-lg leading-8 text-muted-foreground">
           Навчальних задач із поступовим розбором: {learningCount}. Основних

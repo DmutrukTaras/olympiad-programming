@@ -149,6 +149,34 @@ await test('Core has 12 complete patterns, 36 tasks and collapsible implementati
   }
 });
 
+await test('Combination has 12 modeled patterns, 48 tasks and three practices per pattern', () => {
+  const combination = patterns.filter(
+    (pattern) => pattern.level === 'combination',
+  );
+  const combinationIds = new Set(combination.map((pattern) => pattern.id));
+  const combinationTasks = tasks.filter((task) =>
+    task.patternIds.some((id) => combinationIds.has(id)),
+  );
+  assert.equal(combination.length, 12);
+  assert.equal(combinationTasks.length, 48);
+  for (const pattern of combination) {
+    assert.equal(pattern.hasContent, true);
+    assert.equal(pattern.practiceStatus, 'complete');
+    assert.ok(pattern.intuition?.length, pattern.id);
+    assert.ok(pattern.modeling?.length, pattern.id);
+    assert.ok(pattern.priorKnowledge?.length, pattern.id);
+    assert.ok(pattern.preparation?.sections.length === 2, pattern.id);
+    const items = getTasksForPattern(pattern.id);
+    assert.equal(items.filter((task) => task.kind === 'learning').length, 1);
+    assert.equal(items.filter((task) => task.kind === 'practice').length, 3);
+    for (const task of items) {
+      assert.ok(task.examples?.length, task.id);
+      assert.ok(task.constraints.length, task.id);
+      if (task.kind === 'practice') assert.ok(task.hint?.trim(), task.id);
+    }
+  }
+});
+
 await test('Foundation revisions keep routes and distinguish core content from extensions', () => {
   const prefix = patterns.find((pattern) => pattern.id === 'prefix-sum');
   const grid = patterns.find((pattern) => pattern.id === 'prefix-xor-2d');
@@ -218,12 +246,13 @@ await test('pattern template presents concepts before optional C++ notes and the
   );
   const sections = [
     ...source.matchAll(
-      /id="(overview|intuition|recognize|constraints|not-applicable|task|theory|practice)"|<PatternPreparation content=/g,
+      /id="(overview|intuition|modeling|recognize|constraints|not-applicable|task|theory|practice)"|<PatternPreparation content=/g,
     ),
   ].map((match) => match[1] ?? 'preparation');
   assert.deepEqual(sections, [
     'overview',
     'intuition',
+    'modeling',
     'recognize',
     'constraints',
     'not-applicable',

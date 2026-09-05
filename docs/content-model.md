@@ -28,6 +28,12 @@ Combination 14–17, Advanced 18–22, Challenge 23–26.
   і 24 практичні задачі. `core/helpers.ts` зберігає спільний шаблон.
 - `components/content/core-visuals.tsx` — інтерактивні навчальні схеми для руху
   меж, binary search, greedy-порядку, інтервалів, stack і monotonic deque.
+- `content/combination/` — Graphs, Trees/DSU/MST, Dynamic Programming і Queries.
+  Рівень має 12 патернів, 12 навчальних розборів і 36 практичних задач. Основний
+  акцент — модель, переформулювання та явна комбінація раніше вивчених технік.
+- `components/content/combination-visuals.tsx` — інтерактивні моделі обходу grid,
+  вибору shortest path, topological order, Euler Tour, DSU, Kruskal, Grid DP та
+  вибору структури для range operations.
 
 Не змінювати опубліковані `id` і `slug` при перейменуванні матеріалу. Зокрема,
 Search Techniques зберігає адресу `/chapters/binary-search/`.
@@ -40,6 +46,7 @@ Search Techniques зберігає адресу `/chapters/binary-search/`.
 
 - `description` — яку властивість задачі досліджуємо;
 - `intuition` — відкрите пояснення з маленьким прикладом перед задачею;
+- `modeling` — системний Combination-блок «Як змоделювати задачу»;
 - `priorKnowledge` — короткий місток «Що вже використали з Foundation» для Core;
 - `recognitionSigns` — як розпізнати цей патерн в умові;
 - `constraintSignals` — які обмеження важливі;
@@ -56,8 +63,9 @@ Search Techniques зберігає адресу `/chapters/binary-search/`.
 поставити `practiceStatus: 'complete'`. Тести перевіряють цю кількість.
 Не створювати фіктивні задачі або URL заради заповнення карток.
 
-Порядок сторінки: основна ідея → інтуїція та приклад → як розпізнати → constraints →
-коли не підходить → C++ notes → навчальна задача → підсумок → практика.
+Порядок сторінки: основна ідея → інтуїція та приклад → за наявності «Як
+змоделювати» → як розпізнати → constraints → коли не підходить → C++ notes →
+навчальна задача → підсумок → практика.
 «Теорія та C++: заповнити прогалини» розміщується перед навчальною задачею в
 нативному `details` без `open`: початково згорнута, доступна з клавіатури й без
 JavaScript. Для Core вона має окремі секції з необхідною теорією та C++17 notes,

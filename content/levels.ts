@@ -27,7 +27,8 @@ export const levels: Record<
   combination: {
     number: 3,
     label: 'Combination',
-    description: 'Поєднання кількох ідей та складніші моделі задач.',
+    description:
+      '4 глави · 12 патернів · 48 авторських задач. Вчимося будувати модель, переформульовувати умову та поєднувати кілька алгоритмів.',
   },
   advanced: {
     number: 4,
