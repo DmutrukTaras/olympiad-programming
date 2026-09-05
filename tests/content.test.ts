@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFile } from 'node:fs/promises';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { chapters, patterns, problemTypeGroups, tasks } from '@/content';
@@ -18,6 +19,7 @@ import {
 import { LearningTask } from '@/components/content/learning-task';
 import { PatternPreparation } from '@/components/content/pattern-preparation';
 import { PracticeTaskCard } from '@/components/content/practice-task-card';
+import { IntroductionLesson } from '@/components/content/introduction-lessons';
 import type { PracticeProblem } from '@/types/content';
 
 const unique = (items: string[]) =>
@@ -35,7 +37,8 @@ await test('every Foundation pattern has beginner preparation with C++ examples 
     const preparation = pattern.preparation;
     assert.ok(preparation, pattern.id);
     assert.ok(preparation.introduction.trim(), pattern.id);
-    assert.ok(preparation.sections.length >= 3, pattern.id);
+    assert.ok(preparation.sections.length >= 2, pattern.id);
+    assert.ok(pattern.intuition?.length, pattern.id);
     unique(preparation.sections.map((section) => section.title));
     for (const section of preparation.sections) {
       assert.ok(section.title.trim() && section.blocks.length > 0);
@@ -66,7 +69,7 @@ await test('preparation and its self-check answers are collapsed by default with
       createElement(PatternPreparation, { content }),
     );
     assert.ok(html.includes('id="preparation"'));
-    assert.ok(html.includes('Теорія та інструменти C++'));
+    assert.ok(html.includes('C++ / implementation notes'));
     const details = html.match(/<details\b[^>]*>/g) ?? [];
     assert.equal(details.length, 1 + content.questions.length);
     for (const tag of details) assert.doesNotMatch(tag, /\sopen(?:\s|=|>)/);
@@ -78,15 +81,19 @@ await test('Foundation has exactly 12 complete patterns, each with one lesson an
   const foundation = patterns.filter(
     (pattern) => pattern.level === 'foundation',
   );
+  const foundationIds = new Set(foundation.map((pattern) => pattern.id));
+  const foundationTasks = tasks.filter((task) =>
+    task.patternIds.some((id) => foundationIds.has(id)),
+  );
   assert.equal(foundation.length, 12);
-  assert.equal(tasks.length, 36);
+  assert.equal(foundationTasks.length, 37);
   for (const pattern of foundation) {
     assert.equal(pattern.hasContent, true);
     assert.equal(pattern.practiceStatus, 'complete');
     const items = getTasksForPattern(pattern.id);
     assert.equal(items.filter((task) => task.kind === 'learning').length, 1);
     const practice = items.filter((task) => task.kind === 'practice');
-    assert.equal(practice.length, 2);
+    assert.equal(practice.filter((task) => !task.extension).length, 2);
     for (const task of items) {
       assert.ok(task.examples?.length);
       assert.ok(
@@ -101,6 +108,143 @@ await test('Foundation has exactly 12 complete patterns, each with one lesson an
       assert.equal(task.stages.length, 0);
     }
   }
+});
+
+await test('Core has 12 complete patterns, 36 tasks and collapsible implementation notes', () => {
+  const core = patterns.filter((pattern) => pattern.level === 'core');
+  const coreIds = new Set(core.map((pattern) => pattern.id));
+  const coreTasks = tasks.filter((task) =>
+    task.patternIds.some((id) => coreIds.has(id)),
+  );
+  assert.equal(core.length, 12);
+  assert.equal(coreTasks.length, 36);
+  for (const pattern of core) {
+    assert.equal(pattern.hasContent, true);
+    assert.equal(pattern.practiceStatus, 'complete');
+    assert.ok(pattern.intuition?.length, pattern.id);
+    assert.ok(pattern.priorKnowledge?.length, pattern.id);
+    assert.ok(pattern.preparation, pattern.id);
+    assert.equal(pattern.preparation?.questions.length, 0);
+    const html = renderToStaticMarkup(
+      createElement(PatternPreparation, { content: pattern.preparation! }),
+    );
+    assert.equal((html.match(/<details\b/g) ?? []).length, 1);
+    assert.doesNotMatch(html, /<details\b[^>]*\sopen(?:\s|=|>)/);
+
+    const items = getTasksForPattern(pattern.id);
+    assert.equal(items.filter((task) => task.kind === 'learning').length, 1);
+    assert.equal(items.filter((task) => task.kind === 'practice').length, 2);
+    for (const task of items) {
+      assert.equal(task.level, 'core');
+      assert.ok(task.examples?.length, task.id);
+      assert.ok(task.constraints.length, task.id);
+      if (task.kind === 'practice') assert.ok(task.hint?.trim(), task.id);
+    }
+  }
+});
+
+await test('Foundation revisions keep routes and distinguish core content from extensions', () => {
+  const prefix = patterns.find((pattern) => pattern.id === 'prefix-sum');
+  const grid = patterns.find((pattern) => pattern.id === 'prefix-xor-2d');
+  assert.equal(grid?.title, '2D Prefix');
+  assert.equal(grid?.slug, 'prefix-xor-2d');
+  assert.equal(chapterOutlines['ch-08'].mainPatterns[2].title, '2D Prefix');
+  assert.ok(
+    prefix?.extensions?.some((extension) => extension.title === 'Prefix XOR'),
+  );
+  const xor = tasks.find((task) => task.id === 'xor-queries');
+  assert.ok(xor?.kind === 'practice' && xor.extension);
+  assert.deepEqual(xor.patternIds, ['prefix-sum']);
+  assert.ok(
+    getTasksForPattern('prefix-xor-2d').some(
+      (task) => task.id === 'occupied-seats',
+    ),
+  );
+  assert.ok(
+    getTasksForPattern('frequency-counting').some(
+      (task) => task.id === 'rarest-letter' && task.kind === 'practice',
+    ),
+  );
+  const invariants = patterns.find(
+    (pattern) => pattern.id === 'invariants-observations',
+  );
+  assert.ok(
+    invariants?.extensions?.some((extension) =>
+      extension.title.includes('Contribution'),
+    ),
+  );
+  assert.ok(!JSON.stringify(invariants?.theory).includes('Contribution'));
+  assert.ok(
+    chapterOutlines['ch-09'].optionalTopics.some((topic) =>
+      topic.includes('Contribution'),
+    ),
+  );
+  const math = patterns.find((pattern) => pattern.id === 'gcd-lcm-primes');
+  assert.ok(
+    math?.extensions?.some((extension) =>
+      extension.title.includes('факторизація'),
+    ),
+  );
+  assert.ok(
+    math?.extensions?.some((extension) =>
+      extension.title.includes('Binary Exponentiation'),
+    ),
+  );
+  assert.equal(
+    learningStageDefinitions.find((stage) => stage.id === 'brute-force')?.title,
+    'Перший підхід',
+  );
+  assert.equal(
+    learningStageDefinitions.find((stage) => stage.id === 'why-slow')?.title,
+    'Що з ним не так?',
+  );
+  assert.ok(
+    JSON.stringify(
+      tasks.find((task) => task.id === 'track-robot')?.stages,
+    ).includes('уже оптимальний'),
+  );
+});
+
+await test('pattern template presents concepts before optional C++ notes and the learning task', async () => {
+  const source = await readFile(
+    new URL('../app/patterns/[slug]/page.tsx', import.meta.url),
+    'utf8',
+  );
+  const sections = [
+    ...source.matchAll(
+      /id="(overview|intuition|recognize|constraints|not-applicable|task|theory|practice)"|<PatternPreparation content=/g,
+    ),
+  ].map((match) => match[1] ?? 'preparation');
+  assert.deepEqual(sections, [
+    'overview',
+    'intuition',
+    'recognize',
+    'constraints',
+    'not-applicable',
+    'preparation',
+    'task',
+    'theory',
+    'practice',
+  ]);
+});
+
+await test('intro explains total input, verdicts and explicitly marks future algorithms as preview', () => {
+  const render = (chapterId: string) =>
+    renderToStaticMarkup(createElement(IntroductionLesson, { chapterId }));
+  const complexity = render('ch-02');
+  assert.ok(
+    complexity.includes('T test cases') && complexity.includes('sum(n)'),
+  );
+  const recognition = render('ch-04');
+  for (const verdict of [
+    'Wrong Answer',
+    'Time Limit Exceeded',
+    'Memory Limit Exceeded',
+    'Runtime Error',
+  ])
+    assert.ok(recognition.includes(verdict));
+  assert.ok(recognition.includes('Preview, а не передумова'));
+  assert.ok(render('ch-01').includes('Preview: BFS'));
 });
 
 await test('26 chapters, stable published URLs and the five revised level ranges', () => {

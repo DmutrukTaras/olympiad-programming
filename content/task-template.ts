@@ -6,8 +6,9 @@ export const learningStageDefinitions: {
 }[] = [
   { id: 'try-yourself', title: 'Спробуй сам' },
   { id: 'hint', title: 'Підказка' },
-  { id: 'brute-force', title: 'Brute Force' },
-  { id: 'why-slow', title: 'Чому він не проходить' },
+  // Keep internal IDs stable; the first approach need not be brute force or slow.
+  { id: 'brute-force', title: 'Перший підхід' },
+  { id: 'why-slow', title: 'Що з ним не так?' },
   { id: 'observation', title: 'Ключове спостереження' },
   { id: 'algorithm', title: 'Алгоритм' },
   { id: 'proof', title: 'Доведення' },

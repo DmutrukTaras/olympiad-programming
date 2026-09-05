@@ -17,6 +17,7 @@ export function PracticeTaskCard({ task }: { task: PracticeProblem }) {
           <p className="font-mono text-[0.68rem] uppercase tracking-wider text-muted-foreground">
             Самостійна практика ·{' '}
             {task.source === 'author' ? 'Авторська' : 'Algotester'}
+            {task.extension && ' · Extension / необов’язково'}
           </p>
           <h3 className="mt-2 font-semibold">{task.title}</h3>
         </div>

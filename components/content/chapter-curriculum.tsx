@@ -42,7 +42,7 @@ export function ChapterCurriculum({ chapter }: { chapter: Chapter }) {
         </h2>
         <p className="mt-3 leading-7 text-muted-foreground">
           {chapter.level === 'foundation'
-            ? 'Три патерни, три навчальні задачі з повним розбором і шість авторських задач для практики. Починай із власної спроби, а підказки відкривай за потреби.'
+            ? 'Три патерни: спочатку ідея й маленький приклад, потім авторська задача з розбором і дві основні вправи на кожен патерн. C++-підказки та позначені extensions відкривай за потреби.'
             : 'Для кожного патерну — авторська навчальна задача з розбором і 2–4 задачі для практики. Матеріали додаються поступово.'}
         </p>
         <div className="mt-7 space-y-4">
@@ -135,8 +135,9 @@ export function ChapterCurriculum({ chapter }: { chapter: Chapter }) {
             Для подальшого поглиблення
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            Не входить до основного маршруту. Ці матеріали заплановані на
-            пізніше.
+            {chapter.level === 'foundation'
+              ? 'Не входить до обов’язкового маршруту. Короткі previews доступні у згорнутих розширеннях відповідних патернів.'
+              : 'Не входить до основного маршруту. Ці матеріали заплановані на пізніше.'}
           </p>
           <ul className="mt-5 list-inside list-disc space-y-2 text-muted-foreground">
             {chapter.outline?.optionalTopics.map((topic) => (

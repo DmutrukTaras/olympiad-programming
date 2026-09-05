@@ -77,16 +77,13 @@ export default async function PatternPage({ params }: PatternPageProps) {
               На сторінці
             </p>
             <a href="#overview" className="article-nav-link">
-              Огляд
+              Основна ідея
             </a>
-            {pattern.preparation && (
-              <a href="#preparation" className="article-nav-link">
-                Теорія та інструменти C++
+            {pattern.intuition && (
+              <a href="#intuition" className="article-nav-link">
+                Інтуїція та приклад
               </a>
             )}
-            <a href="#task" className="article-nav-link">
-              Навчальна задача
-            </a>
             <a href="#recognize" className="article-nav-link">
               Як розпізнати
             </a>
@@ -95,6 +92,14 @@ export default async function PatternPage({ params }: PatternPageProps) {
             </a>
             <a href="#not-applicable" className="article-nav-link">
               Коли НЕ підходить
+            </a>
+            {pattern.preparation && (
+              <a href="#preparation" className="article-nav-link">
+                C++ / implementation notes
+              </a>
+            )}
+            <a href="#task" className="article-nav-link">
+              Навчальна задача
             </a>
             <a href="#theory" className="article-nav-link">
               Підсумок та шпаргалка
@@ -135,23 +140,31 @@ export default async function PatternPage({ params }: PatternPageProps) {
             <h1 className="mt-4 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
               {pattern.title}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+            <h2 className="eyebrow mt-6">Основна ідея</h2>
+            <p className="mt-3 text-lg leading-8 text-muted-foreground">
               {pattern.description}
             </p>
           </header>
 
-          {pattern.preparation && (
-            <PatternPreparation content={pattern.preparation} />
+          {pattern.intuition && (
+            <section
+              id="intuition"
+              className="scroll-mt-28 border-b border-border py-10"
+            >
+              <h2 className="mb-6 text-2xl font-semibold tracking-tight">
+                Інтуїція та маленький приклад
+              </h2>
+              <ContentBlocks blocks={pattern.intuition} />
+            </section>
           )}
 
-          {learningTask && (
-            <section
-              id="task"
-              className="scroll-mt-28 border-t border-border py-10"
-            >
-              <p className="eyebrow mb-5">Спробуй пройти шлях самостійно</p>
-              <LearningTask key={learningTask.id} task={learningTask} />
-            </section>
+          {Boolean(pattern.priorKnowledge?.length) && (
+            <aside className="mb-2 rounded-2xl border border-primary/20 bg-primary/[0.055] p-5">
+              <p className="font-semibold">Що вже використали з Foundation</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {pattern.priorKnowledge?.join(' · ')}
+              </p>
+            </aside>
           )}
 
           <section id="recognize" className="scroll-mt-28 py-10">
@@ -184,7 +197,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
           >
             <div className="flex items-center gap-2 text-primary">
               <Gauge className="size-4" aria-hidden="true" />
-              <p className="eyebrow">Constraints-сигнали</p>
+              <h2 className="eyebrow">Сигнали з constraints</h2>
             </div>
             <div className="mt-6 grid gap-3">
               {pattern.constraintSignals.map((signal) => (
@@ -221,6 +234,20 @@ export default async function PatternPage({ params }: PatternPageProps) {
             </ul>
           </section>
 
+          {pattern.preparation && (
+            <PatternPreparation content={pattern.preparation} />
+          )}
+
+          {learningTask && (
+            <section
+              id="task"
+              className="scroll-mt-28 border-t border-border py-10"
+            >
+              <p className="eyebrow mb-5">Навчальна авторська задача</p>
+              <LearningTask key={learningTask.id} task={learningTask} />
+            </section>
+          )}
+
           <section
             id="theory"
             className="scroll-mt-28 border-t border-border py-10"
@@ -237,6 +264,26 @@ export default async function PatternPage({ params }: PatternPageProps) {
                 <ContentBlocks blocks={pattern.theory} />
               </div>
             </details>
+            {pattern.extensions?.map((extension) => (
+              <details
+                key={extension.title}
+                className="mt-4 rounded-2xl border border-dashed border-border bg-card p-5"
+              >
+                <summary className="cursor-pointer font-semibold">
+                  <span className="mb-2 block font-mono text-xs font-normal text-primary">
+                    Extension / preview · необов’язково
+                  </span>
+                  {extension.title}
+                </summary>
+                <div className="mt-6">
+                  <p className="mb-5 text-sm leading-6 text-muted-foreground">
+                    Це розширення можна пропустити й продовжити основний маршрут
+                    Foundation.
+                  </p>
+                  <ContentBlocks blocks={extension.blocks} />
+                </div>
+              </details>
+            ))}
           </section>
 
           <section

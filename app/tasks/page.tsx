@@ -10,36 +10,59 @@ import {
 
 export const metadata: Metadata = {
   title: 'Задачі',
-  description: 'Авторські навчальні та практичні задачі рівня Foundation.',
+  description:
+    'Авторські навчальні та практичні задачі рівнів Foundation і Core.',
 };
 
 export default function TasksPage() {
-  const foundation = chapters.filter(
-    (chapter) => chapter.order >= 6 && chapter.order <= 9,
+  const publishedChapters = chapters.filter(
+    (chapter) => chapter.order >= 6 && chapter.order <= 13,
   );
+  const publishedTasks = publishedChapters.flatMap((chapter) =>
+    getPatternsForChapter(chapter.id).flatMap((pattern) =>
+      getTasksForPattern(pattern.id),
+    ),
+  );
+  const learningCount = publishedTasks.filter(
+    (task) => task.kind === 'learning',
+  ).length;
+  const practiceCount = publishedTasks.filter(
+    (task) => task.kind === 'practice' && !task.extension,
+  ).length;
+  const extensionCount = publishedTasks.filter(
+    (task) => task.kind === 'practice' && task.extension,
+  ).length;
   return (
     <main className="page-shell py-14 sm:py-20">
       <header className="mb-12 max-w-3xl">
-        <LevelBadge level="foundation" />
+        <div className="flex flex-wrap gap-2">
+          <LevelBadge level="foundation" />
+          <LevelBadge level="core" />
+        </div>
         <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Задачі Foundation
+          Задачі Foundation та Core
         </h1>
         <p className="mt-5 text-lg leading-8 text-muted-foreground">
-          12 навчальних задач із поступовим розбором і 24 задачі для самостійної
-          роботи. Уся практика авторська, з повними умовами й однією підказкою.
+          Навчальних задач із поступовим розбором: {learningCount}. Основних
+          практичних: {practiceCount}; додаткових вправ-extension:{' '}
+          {extensionCount}. Уся практика авторська, з повними умовами й однією
+          підказкою.
         </p>
       </header>
       <div className="space-y-12">
-        {foundation.map((chapter) => (
+        {publishedChapters.map((chapter) => (
           <section key={chapter.id}>
-            <h2 className="mb-5 text-2xl font-semibold">
-              <Link
-                href={`/chapters/${chapter.slug}`}
-                className="hover:text-primary"
-              >
-                {chapter.order}. {chapter.title}
-              </Link>
-            </h2>
+            <div className="mb-5 flex flex-wrap items-center gap-3">
+              <h2 className="text-2xl font-semibold">
+                <Link
+                  href={`/chapters/${chapter.slug}`}
+                  className="hover:text-primary"
+                >
+                  {chapter.order}. {chapter.title}
+                </Link>
+              </h2>
+              <LevelBadge level={chapter.level} compact />
+            </div>
             <div className="grid gap-4 lg:grid-cols-3">
               {getPatternsForChapter(chapter.id)
                 .filter((pattern) => pattern.hasContent)
@@ -78,7 +101,14 @@ export default function TasksPage() {
                                 href={`/patterns/${pattern.slug}#practice-${task.id}`}
                                 className="flex items-start justify-between gap-2 text-sm leading-6 hover:text-primary"
                               >
-                                {task.title}
+                                <span>
+                                  {task.title}
+                                  {task.extension && (
+                                    <span className="block text-xs text-muted-foreground">
+                                      Extension · необов’язково
+                                    </span>
+                                  )}
+                                </span>
                                 <LevelBadge level={task.level} compact />
                               </Link>
                             </li>

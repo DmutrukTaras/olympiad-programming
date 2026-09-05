@@ -14,11 +14,11 @@ export function PatternPreparation({ content }: { content: Preparation }) {
             />
             <span className="min-w-0 flex-1">
               <span className="block text-lg font-semibold tracking-tight sm:text-xl">
-                Теорія та інструменти C++
+                C++ / implementation notes
               </span>
               <span className="mt-2 block text-sm font-normal leading-6 text-muted-foreground">
-                Пояснення з нуля, короткі приклади й типові помилки. Відкрий,
-                якщо потрібно підготуватися до задачі.
+                Додатковий refresher: синтаксис, STL і типові помилки. Відкрий
+                за потреби; основна ідея патерну вже є вище.
               </span>
             </span>
             <ChevronDown
@@ -51,34 +51,38 @@ export function PatternPreparation({ content }: { content: Preparation }) {
             </section>
           ))}
 
-          <section className="border-t border-border pt-6">
-            <h3 className="text-lg font-semibold">
-              Перевір себе перед задачею
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Спробуй відповісти подумки, а тоді відкрий пояснення.
-            </p>
-            <div className="mt-4 space-y-3">
-              {content.questions.map(({ question, answer }, index) => (
-                <details
-                  key={question}
-                  className="group/question rounded-xl border border-border bg-background/50"
-                >
-                  <summary className="flex cursor-pointer list-none items-start gap-3 rounded-xl p-4 text-sm font-medium leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
-                    <span className="font-mono text-primary">0{index + 1}</span>
-                    <span className="flex-1">{question}</span>
-                    <ChevronDown
-                      className="mt-1 size-4 shrink-0 text-muted-foreground motion-safe:transition-transform group-open/question:rotate-180"
-                      aria-hidden="true"
-                    />
-                  </summary>
-                  <p className="border-t border-border px-4 py-4 text-sm leading-7 text-muted-foreground">
-                    {answer}
-                  </p>
-                </details>
-              ))}
-            </div>
-          </section>
+          {content.questions.length > 0 && (
+            <section className="border-t border-border pt-6">
+              <h3 className="text-lg font-semibold">
+                Перевір себе перед задачею
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Спробуй відповісти подумки, а тоді відкрий пояснення.
+              </p>
+              <div className="mt-4 space-y-3">
+                {content.questions.map(({ question, answer }, index) => (
+                  <details
+                    key={question}
+                    className="group/question rounded-xl border border-border bg-background/50"
+                  >
+                    <summary className="flex cursor-pointer list-none items-start gap-3 rounded-xl p-4 text-sm font-medium leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
+                      <span className="font-mono text-primary">
+                        0{index + 1}
+                      </span>
+                      <span className="flex-1">{question}</span>
+                      <ChevronDown
+                        className="mt-1 size-4 shrink-0 text-muted-foreground motion-safe:transition-transform group-open/question:rotate-180"
+                        aria-hidden="true"
+                      />
+                    </summary>
+                    <p className="border-t border-border px-4 py-4 text-sm leading-7 text-muted-foreground">
+                      {answer}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </details>
     </section>

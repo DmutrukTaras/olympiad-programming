@@ -37,6 +37,7 @@ const sectionLinks: Record<string, SectionLink[]> = {
     { id: 'complexity-classes', title: 'Класи складності' },
     { id: 'complexity-map', title: 'Орієнтовна карта' },
     { id: 'all-parameters', title: 'Усі параметри' },
+    { id: 'test-cases', title: 'T тестів та sum(n)' },
     { id: 'memory', title: 'Пам’ять' },
     { id: 'complexity-example', title: 'Приклад' },
   ],
@@ -53,6 +54,7 @@ const sectionLinks: Record<string, SectionLink[]> = {
     { id: 'context', title: 'Контекст патерну' },
     { id: 'verify', title: 'Перевірка гіпотези' },
     { id: 'counterexample', title: 'Контрприклади' },
+    { id: 'verdicts', title: 'WA / TLE / MLE / RE' },
   ],
   'ch-05': [
     { id: 'cpp-template', title: 'Базовий шаблон' },
@@ -119,8 +121,13 @@ function ReadingProblemLesson() {
           перетворюється на точне запитання: «чи існує шлях між двома вершинами?» Тепер уже
           природно перевірити DFS або BFS.
         </LessonText>
+        <LessonCallout title="Preview наступних глав">
+          DFS і BFS вивчатимемо в главі про графи. Зараз не потрібно знати ці алгоритми
+          чи відтворювати код нижче: важливий лише перехід від історії до моделі
+          «об’єкти та зв’язки». Реалізацію можна пропустити.
+        </LessonCallout>
         <CodeBlock
-          caption="Модель досяжності у графі"
+          caption="Preview: BFS — зараз знати реалізацію не потрібно"
           code={`bool canReach(int start, int finish,
               const vector<vector<int>>& graph) {
     queue<int> q;
@@ -289,6 +296,40 @@ k ≤ 18`} />
           <InlineCode>O(n + 2ᵏ)</InlineCode> буде допустимим.
         </LessonText>
         <Formula label="комбінуємо параметри">O(n + 2ᵏ)</Formula>
+      </LessonSection>
+
+      <LessonSection id="test-cases" eyebrow="Увесь input" title="T test cases та sum(n)">
+        <LessonText>
+          Один запуск програми може містити T незалежних наборів даних. Тоді час потрібно
+          оцінювати для всього вводу, а не лише для найбільшого окремого тесту.
+          Обмеження sum(n) = Σnᵢ задає загальну кількість елементів у всіх наборах.
+        </LessonText>
+        <CodeBlock language="Constraints" caption="Обмеження одного тесту та всього вводу" code={`1 ≤ T ≤ 10000
+1 ≤ nᵢ ≤ 200000
+sum(nᵢ) ≤ 200000`} />
+        <LessonTable columns={['Підхід на один тест', 'Час для всіх тестів']} rows={[
+          ['O(nᵢ)', 'O(T + Σnᵢ), а не автоматично T · 200000'],
+          ['O(nᵢ log nᵢ)', 'O(T + Σ(nᵢ log nᵢ))'],
+          ['O(nᵢ²)', 'O(T + Σnᵢ²): один великий тест усе ще може бути надто дорогим'],
+        ]} />
+        <CodeBlock caption="Стан кожного тесту створюється заново" code={`int T;
+cin >> T;
+while (T--) {
+    int n;
+    cin >> n;
+    long long sum = 0;
+    for (int i = 0; i < n; ++i) {
+        long long x;
+        cin >> x;
+        sum += x;
+    }
+    cout << sum << '\\n';
+}`} />
+        <LessonCallout title="Не вигадуй гарантію sum(n)">
+          Якщо сумарної межі немає, враховуй найгірший випадок T·n_max. Обнуляй
+          лічильники й контейнери між тестами. Пам’ять зазвичай оцінюється за найбільшим
+          одночасно збереженим станом, а не сумою пам’яті всіх послідовно оброблених тестів.
+        </LessonCallout>
       </LessonSection>
 
       <LessonSection id="memory" eyebrow="Не лише час" title="Пам’ять теж має складність">
@@ -507,10 +548,10 @@ function PatternRecognitionLesson() {
         <LessonTable
           columns={['Що бачимо', 'Про що варто подумати']}
           rows={[
-            [<>багато запитів <InlineCode>[l, r]</InlineCode></>, 'Prefix / Fenwick / Segment Tree'],
+            [<>багато запитів <InlineCode>[l, r]</InlineCode></>, 'Prefix; Fenwick / Segment Tree — preview'],
             ['найдовший допустимий відрізок', 'Two Pointers / Sliding Window'],
-            ['мінімальна кількість переходів', 'BFS'],
-            ['мінімальний шлях із вагами', 'Dijkstra'],
+            ['мінімальна кількість переходів без ваг', 'BFS — preview'],
+            ['мінімальний шлях із невід’ємними вагами', 'Dijkstra — preview'],
             ['залежності між об’єктами', 'Graph / DAG'],
             ['кількість способів', 'DP / Combinatorics'],
             [<InlineCode key="n">n ≤ 20</InlineCode>, 'Bitmask / Subsets'],
@@ -520,6 +561,11 @@ function PatternRecognitionLesson() {
           ]}
         />
         <LessonQuote>Побачив сигнал — сформував гіпотезу. Не автоматичну відповідь.</LessonQuote>
+        <LessonCallout title="Preview, а не передумова">
+          Знати BFS, Fenwick Tree чи Segment Tree зараз не потрібно. Це назви майбутніх
+          інструментів: вони показують, як змінюється вибір при інших властивостях задачі.
+          Реалізації з’являться у відповідних главах; зараз достатньо розуміти запитання.
+        </LessonCallout>
       </LessonSection>
 
       <LessonSection id="context" eyebrow="Уточнення" title="Один сигнал може вести до різних алгоритмів">
@@ -575,6 +621,24 @@ function PatternRecognitionLesson() {
         <Remember>
           Патерн дає гіпотезу. Доведення або контрприклад визначає, чи ця гіпотеза правильна.
         </Remember>
+      </LessonSection>
+
+      <LessonSection id="verdicts" eyebrow="Після відправки" title="Що означають WA, TLE, MLE та RE">
+        <LessonText>
+          Verdict — результат перевірки посилки. Він допомагає вибрати напрямок пошуку
+          помилки, але не називає конкретний неправильний рядок коду.
+        </LessonText>
+        <LessonTable columns={['Verdict', 'Значення', 'Що перевірити спочатку']} rows={[
+          ['WA · Wrong Answer', 'Неправильна відповідь', 'Умова, межі, рівності, індекси, overflow, формат виводу'],
+          ['TLE · Time Limit Exceeded', 'Перевищено час', 'Складність для всіх тестів, зайві цикли, повторні обчислення'],
+          ['MLE · Memory Limit Exceeded', 'Перевищено пам’ять', 'Розмір таблиць, копії контейнерів, збереження зайвої історії'],
+          ['RE · Runtime Error', 'Помилка під час виконання', 'Вихід за межі, доступ до порожнього контейнера, ділення на нуль, переповнення стека'],
+        ]} />
+        <LessonCallout title="Вердикт — підказка, не доказ причини">
+          Вихід за межі або інша невизначена поведінка можуть дати не лише RE, а й WA
+          або непостійний результат. Спочатку відтвори збій на маленькому тесті;
+          не змінюй алгоритм навмання лише за назвою verdict.
+        </LessonCallout>
       </LessonSection>
 
       <SelfCheck
@@ -725,7 +789,7 @@ q.push(5);
 int first = q.front();
 q.pop();
 
-// Головний приклад: BFS`}
+// BFS — preview наступних глав, зараз знати його не потрібно.`}
           />
           <CodeBlock
             caption="priority_queue · поточний min / max"

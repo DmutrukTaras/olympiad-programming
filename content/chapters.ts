@@ -164,7 +164,7 @@ export const chapters: Chapter[] = [
       takeaways: [
         'Побачити повторне обчислення тієї самої інформації.',
         'Побудувати префіксний стан і правильно визначити його межі.',
-        'Використовувати Prefix Sum / Count, Difference Array, Prefix XOR і 2D Prefix.',
+        'Використовувати Prefix Sum / Count, Difference Array і 2D Prefix; розрізняти prefix та suffix.',
       ],
       hasContent: true,
     },
@@ -195,6 +195,15 @@ export const chapters: Chapter[] = [
     'Підтримуємо рухоме вікно без повторної роботи.',
     'core',
     ['підмасиви', 'відрізки'],
+    {
+      prerequisiteIds: ['ch-06', 'ch-07', 'ch-08'],
+      takeaways: [
+        'Рухати дві межі лише вперед і доводити, які кандидати відкидаються.',
+        'Підтримувати суму або частоти поточного sliding window без повторного підрахунку.',
+        'Розрізняти задачу про пару, неперервний відрізок і range query.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-11',
@@ -204,6 +213,15 @@ export const chapters: Chapter[] = [
     'Шукаємо межу допустимих значень і досліджуємо простір відповіді.',
     'core',
     ['пошук', 'оптимізація'],
+    {
+      prerequisiteIds: ['ch-02', 'ch-07'],
+      takeaways: [
+        'Безпечно працювати з lower_bound, upper_bound та межами binary search.',
+        'Перетворювати оптимізацію на монотонну перевірку can(X).',
+        'Розпізнавати Minimize Maximum / Maximize Minimum і доводити greedy-check.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-12',
@@ -213,6 +231,15 @@ export const chapters: Chapter[] = [
     'Робимо локальний вибір або будуємо потрібний об’єкт.',
     'core',
     ['вибір', 'побудова'],
+    {
+      prerequisiteIds: ['ch-04', 'ch-07'],
+      takeaways: [
+        'Доводити greedy через exchange argument, а не лише інтуїцію.',
+        'Вибирати правильний порядок для інтервалів та перевіряти модель їх меж.',
+        'Будувати конструкцію блоками й окремо доводити випадки неможливості.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-13',
@@ -222,6 +249,15 @@ export const chapters: Chapter[] = [
     'Підтримуємо потрібний порядок елементів онлайн.',
     'core',
     ['стек', 'черга'],
+    {
+      prerequisiteIds: ['ch-05', 'ch-06', 'ch-10'],
+      takeaways: [
+        'Вибирати stack, queue або deque за потрібним порядком доступу.',
+        'Знаходити nearest greater / smaller монотонним стеком за O(n).',
+        'Підтримувати minimum або maximum кожного вікна монотонною чергою.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-14',

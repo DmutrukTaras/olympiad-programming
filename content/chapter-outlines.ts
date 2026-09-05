@@ -20,21 +20,26 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
     pattern('custom-sort-order', 'Власний порядок сортування'),
     pattern('basic-stl-structures', 'Вибір структури даних'),
   ]),
-  'ch-08': outline([
-    pattern('prefix-sum', 'Prefix Sum / Prefix Count'),
-    pattern('difference-array', 'Difference Array'),
-    pattern('prefix-xor-2d', 'Prefix XOR / 2D Prefix'),
-  ]),
+  'ch-08': outline(
+    [
+      pattern('prefix-sum', 'Prefix Sum / Prefix Count'),
+      pattern('difference-array', 'Difference Array'),
+      pattern('prefix-xor-2d', '2D Prefix'),
+    ],
+    ['Suffix: інформація праворуч'],
+    ['Prefix XOR — extension до Prefix Sum'],
+  ),
   'ch-09': outline(
     [
       pattern('parity-remainders', 'Парність, modulo та подільність'),
       pattern('gcd-lcm-primes', 'GCD, LCM та прості числа'),
       pattern('invariants-observations', 'Інваріанти та спостереження'),
     ],
+    ['MEX', 'Прості конструктивні математичні задачі'],
     [
-      'MEX',
-      'Contribution technique на базовому рівні',
-      'Прості конструктивні математичні задачі',
+      'Contribution Technique — preview',
+      'Перебір дільників / факторизація за O(√n)',
+      'Binary Exponentiation',
     ],
   ),
   'ch-10': outline([
@@ -68,8 +73,8 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
   ),
   'ch-13': outline([
     pattern('stack-queue-deque', 'Stack / Queue / Deque'),
-    pattern('nearest-greater-smaller', 'Nearest Greater / Smaller'),
-    pattern('monotonic-structures', 'Monotonic Stack / Monotonic Queue'),
+    pattern('monotonic-stack', 'Nearest Greater / Smaller і Monotonic Stack'),
+    pattern('monotonic-queue', 'Monotonic Queue'),
   ]),
   'ch-14': outline(
     [

@@ -21,6 +21,7 @@ export interface ChapterOutline {
 
 export type ContentBlock =
   | { type: 'visual'; kind: FoundationVisualKind }
+  | { type: 'core-visual'; kind: CoreVisualKind }
   | { type: 'table'; columns: string[]; rows: string[][] }
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
@@ -36,6 +37,16 @@ export type FoundationVisualKind =
   | 'grid'
   | 'cycle'
   | 'invariant';
+
+export type CoreVisualKind =
+  | 'two-pointers'
+  | 'sliding-window'
+  | 'binary-search'
+  | 'greedy-order'
+  | 'interval-greedy'
+  | 'brackets'
+  | 'monotonic-stack'
+  | 'monotonic-queue';
 
 export interface TaskExample {
   input: string;
@@ -70,11 +81,14 @@ export interface Pattern {
   title: string;
   level: LevelId;
   description: string;
+  intuition?: ContentBlock[];
+  priorKnowledge?: string[];
   recognitionSigns: string[];
   constraintSignals: string[];
   notApplicableSigns: string[];
   preparation?: PatternPreparation;
   theory: ContentBlock[];
+  extensions?: { title: string; blocks: ContentBlock[] }[];
   practiceStatus: 'planned' | 'complete';
   hasContent: boolean;
 }
@@ -124,6 +138,7 @@ export type PracticeProblem = TaskBase & {
   kind: 'practice';
   source: 'author' | 'algotester';
   externalUrl?: string;
+  extension?: boolean;
 };
 
 export type Task = LearningProblem | PracticeProblem;
