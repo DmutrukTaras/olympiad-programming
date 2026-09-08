@@ -193,7 +193,8 @@ export const problemTypeGroups: ProblemTypeGroup[] = [
       'Algebraic Transformation',
       'Переформулювання задачі',
       'Комбінування алгоритмів',
+      'Game Theory',
     ],
-    chapterIds: ['ch-09', 'ch-12', 'ch-26'],
+    chapterIds: ['ch-09', 'ch-12', 'ch-25', 'ch-26'],
   },
 ];

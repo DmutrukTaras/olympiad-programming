@@ -339,6 +339,15 @@ export const chapters: Chapter[] = [
     'Шукаємо збіги, періоди та структуру тексту.',
     'advanced',
     ['рядки', 'пошук'],
+    {
+      prerequisiteIds: ['ch-06', 'ch-08', 'ch-11'],
+      takeaways: [
+        'Будувати prefix function і Z-function та застосовувати їх до пошуку й періодів.',
+        'Порівнювати підрядки хешами, явно контролюючи колізії та індекси.',
+        'Вибирати рядковий алгоритм за тим, яку саме інформацію про збіги повертає задача.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-19',
@@ -348,6 +357,15 @@ export const chapters: Chapter[] = [
     'Перетворюємо геометричні умови на точні обчислення.',
     'advanced',
     ['координати', 'геометрія'],
+    {
+      prerequisiteIds: ['ch-07', 'ch-09', 'ch-12'],
+      takeaways: [
+        'Перекладати повороти, належність і перетини у знаки cross product.',
+        'Коректно обробляти колінеарність, межі відрізків і цілочисельну точність.',
+        'Будувати convex hull та використовувати його як компактну оболонку множини точок.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-20',
@@ -357,6 +375,15 @@ export const chapters: Chapter[] = [
     'Використовуємо малий параметр замість великого n.',
     'advanced',
     ['малий n', 'підмножини'],
+    {
+      prerequisiteIds: ['ch-02', 'ch-03', 'ch-16'],
+      takeaways: [
+        'Кодувати вибір підмножини бітовою маскою та безпечно перебирати маски й підмаски.',
+        'Проєктувати Bitmask DP, де mask є достатнім описом уже виконаних рішень.',
+        'Ділити експоненційний пошук навпіл через Meet in the Middle.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-21',
@@ -366,6 +393,15 @@ export const chapters: Chapter[] = [
     'Поєднуємо структуру графа з ефективними запитами.',
     'advanced',
     ['графи', 'дерева'],
+    {
+      prerequisiteIds: ['ch-14', 'ch-15', 'ch-16', 'ch-17'],
+      takeaways: [
+        'Стискати орієнтований граф у DAG компонент сильної зв’язності та знаходити критичні ребра й вершини.',
+        'Відповідати на ancestor/LCA-запити за допомогою binary lifting.',
+        'Перераховувати відповіді для всіх коренів і зливати інформацію піддерев без квадратичної роботи.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-22',
@@ -375,6 +411,15 @@ export const chapters: Chapter[] = [
     'Рахуємо конфігурації та працюємо з випадковістю.',
     'advanced',
     ['математика', 'комбінаторика'],
+    {
+      prerequisiteIds: ['ch-09', 'ch-16', 'ch-20'],
+      takeaways: [
+        'Рахувати комбінаторні об’єкти та застосовувати Inclusion–Exclusion без подвійного підрахунку.',
+        'Будувати expectation через індикатори й лінійність математичного сподівання.',
+        'Розв’язувати модульні рівняння та прискорювати лінійні переходи матричним піднесенням до степеня.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-23',
@@ -384,6 +429,15 @@ export const chapters: Chapter[] = [
     'Моделюємо призначення, пропускні здатності та розподіл.',
     'challenge',
     ['зв’язки', 'розподіл'],
+    {
+      prerequisiteIds: ['ch-14', 'ch-15', 'ch-21'],
+      takeaways: [
+        'Розпізнавати assignment як bipartite matching і перебудовувати рішення augmenting paths.',
+        'Пояснювати residual graph та реалізовувати Dinic для maximum flow.',
+        'Будувати й доводити flow/min-cut reductions, включно з vertex capacities і costs.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-24',
@@ -393,6 +447,15 @@ export const chapters: Chapter[] = [
     'Прискорюємо переходи за допомогою додаткової структури.',
     'challenge',
     ['оптимізація DP'],
+    {
+      prerequisiteIds: ['ch-16', 'ch-17', 'ch-19'],
+      takeaways: [
+        'Знаходити структуру argmin і застосовувати Divide & Conquer Optimization лише після доведення monotonicity.',
+        'Перевіряти строгі умови Knuth замість орієнтації лише на форму recurrence.',
+        'Перетворювати DP-transition на line queries та вибирати між monotone CHT і Li Chao Tree.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-25',
@@ -402,6 +465,15 @@ export const chapters: Chapter[] = [
     'Шукаємо виграшні стани та правильну модель гри.',
     'challenge',
     ['ігри', 'стани'],
+    {
+      prerequisiteIds: ['ch-09', 'ch-14', 'ch-16', 'ch-20'],
+      takeaways: [
+        'Класифікувати winning/losing states як DP на state graph.',
+        'Доводити zero-XOR invariant Nim і відновлювати виграшний хід.',
+        'Обчислювати Grundy numbers та XOR-комбінувати незалежні impartial games.',
+      ],
+      hasContent: true,
+    },
   ),
   chapter(
     'ch-26',
@@ -411,5 +483,14 @@ export const chapters: Chapter[] = [
     'Змінюємо погляд на задачу, коли готового патерну не видно.',
     'challenge',
     ['переформулювання', 'комбінація'],
+    {
+      prerequisiteIds: ['ch-17', 'ch-20', 'ch-21', 'ch-23', 'ch-24', 'ch-25'],
+      takeaways: [
+        'Будувати implicit state graph із мінімальним достатнім станом.',
+        'Перетворювати deletions на additions через reverse time та застосовувати rollback.',
+        'Розкладати capstone-задачу на representation, decomposition і data structure та доводити їхні interfaces.',
+      ],
+      hasContent: true,
+    },
   ),
 ];

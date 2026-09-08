@@ -2,6 +2,8 @@ import { Lightbulb } from 'lucide-react';
 import { FoundationVisual } from '@/components/content/foundation-visuals';
 import { CoreVisual } from '@/components/content/core-visuals';
 import { CombinationVisual } from '@/components/content/combination-visuals';
+import { AdvancedVisual } from '@/components/content/advanced-visuals';
+import { ChallengeVisual } from '@/components/content/challenge-visuals';
 import { LessonTable } from '@/components/content/lesson-ui';
 import type { ContentBlock } from '@/types/content';
 
@@ -15,6 +17,10 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           return <CoreVisual key={index} kind={block.kind} />;
         if (block.type === 'combination-visual')
           return <CombinationVisual key={index} kind={block.kind} />;
+        if (block.type === 'advanced-visual')
+          return <AdvancedVisual key={index} kind={block.kind} />;
+        if (block.type === 'challenge-visual')
+          return <ChallengeVisual key={index} kind={block.kind} />;
         if (block.type === 'table')
           return (
             <LessonTable

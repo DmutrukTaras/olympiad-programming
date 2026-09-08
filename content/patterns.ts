@@ -1,4 +1,6 @@
 import type { Pattern } from '@/types/content';
+import { advancedPatterns } from '@/content/advanced';
+import { challengePatterns } from '@/content/challenge';
 import { chapters } from '@/content/chapters';
 import { combinationPatterns } from '@/content/combination';
 import { corePatterns } from '@/content/core';
@@ -28,7 +30,11 @@ const publishedPatterns: Record<string, Pattern> = Object.fromEntries(
     })),
     ...corePatterns,
     ...combinationPatterns,
-  ].map(extendPreparation).map((pattern) => [pattern.id, pattern]),
+    ...advancedPatterns,
+    ...challengePatterns,
+  ]
+    .map(extendPreparation)
+    .map((pattern) => [pattern.id, pattern]),
 );
 
 // Drafts come from the chapter outline, so navigation cannot drift away from it.

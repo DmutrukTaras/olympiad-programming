@@ -102,6 +102,11 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
                     Optional / later
                   </a>
                 )}
+                {chapter.id === 'ch-26' && (
+                  <a href="#final-mixed-set" className="article-nav-link">
+                    Final Mixed Set
+                  </a>
+                )}
                 {getProblemTypesForChapter(chapter.id).length > 0 && (
                   <a href="#related-types" className="article-nav-link">
                     Пов’язані типи задач

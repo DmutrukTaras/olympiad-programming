@@ -22,7 +22,7 @@ Combination 14–17, Advanced 18–22, Challenge 23–26.
 - `content/foundation/preparation/` — базова підготовча теорія та інструменти C++17
   для всіх 12 патернів. Матеріал приєднується за стабільним `pattern.id`.
 - `content/theory/` — розширення підготовчої теорії для всіх опублікованих
-  патернів Foundation, Core і Combination. Воно доповнює `preparation`, не змінюючи
+  патернів Foundation, Core, Combination і Advanced. Воно доповнює `preparation`, не змінюючи
   основний матеріал патерну чи навчальну задачу.
 - `content/foundation/extensions.ts` — необов’язкові Prefix XOR, Contribution preview,
   перебір дільників / факторизація та Binary Exponentiation.
@@ -37,6 +37,22 @@ Combination 14–17, Advanced 18–22, Challenge 23–26.
 - `components/content/combination-visuals.tsx` — інтерактивні моделі обходу grid,
   вибору shortest path, topological order, Euler Tour, DSU, Kruskal, Grid DP та
   вибору структури для range operations.
+- `content/advanced/` — п’ять модулів рівня Advanced: Strings, Geometry,
+  Bitmask/MITM, Advanced Graphs/Trees і Math. Рівень має 15 патернів, 15 повних
+  авторських розборів і 51 практичну задачу. Для кожного патерну підготовлено
+  п’ять великих секцій окремої theory-сторінки.
+- `components/content/advanced-visuals.tsx` — 15 інтерактивних покрокових моделей:
+  fallback KMP, Z-box, rolling hash, cross product, перетини, hull, маски, MITM,
+  декомпозиції графів, binary lifting, rerooting, expectation і matrix power.
+- `content/challenge/` — чотири фінальні модулі: Matching/Flow, DP Optimization,
+  Game Theory та Reformulation. Рівень має 12 патернів, 12 повних авторських
+  розборів і 36 практичних задач із поступовим приховуванням патерну.
+- `components/content/challenge-visuals.tsx` — інтерактивні reductions для
+  augmenting/residual paths, DP opt windows, CHT, ігор, state expansion,
+  reverse time та HLD decomposition.
+- `content/final-mixed-set.ts` — фінальний checkpoint із 10 задач без назв
+  патернів, рівнів і hints. Він показується наприкінці глави 26 та не входить у
+  лічильники практики окремих патернів.
 
 Не змінювати опубліковані `id` і `slug` при перейменуванні матеріалу. Зокрема,
 Search Techniques зберігає адресу `/chapters/binary-search/`.
@@ -73,7 +89,11 @@ Search Techniques зберігає адресу `/chapters/binary-search/`.
 «Основної ідеї» й веде на `/patterns/[slug]/theory/`. На theory-сторінці матеріал
 відкритий повністю; згорнутими лишаються тільки відповіді самоперевірки. Глибина
 підготовки зростає разом із рівнем: Foundation орієнтовно 1.5–2× від початкового
-refresher, Core 2.5–3×, Combination 3–5×. Мініприклади не повинні бути готовим
+refresher, Core 2.5–3×, Combination 3–5×. Для Advanced кожна theory-сторінка має
+п’ять великих частин: поняття, C++17, механіка, доведення/оцінка та пастки/варіації.
+Challenge зберігає цю глибину, але додає явний двосторонній доказ reduction,
+перевірку математичних передумов і повну оцінку композиції алгоритмів.
+Мініприклади не повинні бути готовим
 розв’язком навчальної задачі. Існуючий матеріал після розбору залишається як
 «Підсумок та C++ шпаргалка», якір `#theory` збережений.
 
@@ -105,7 +125,9 @@ stages: createLearningStages({
 ```
 
 `ContentBlock` підтримує абзаци, списки, смислові вставки, таблиці, код (`cpp` / `text`)
-та схеми (`visual` для Foundation, `core-visual` для інтерактивів Core). Схеми Foundation вбудовані у ключові спостереження, тому
+та схеми (`visual` для Foundation, `core-visual` для Core, `combination-visual`
+для Combination, `advanced-visual` для Advanced і `challenge-visual` для
+Challenge). Схеми Foundation вбудовані у ключові спостереження, тому
 відкриваються разом із відповідним кроком розбору. Компоненти схем не потребують
 нових бібліотек; Core-схеми використовують уже наявні React і UI-кнопки. Поле
 `examples` містить ввід, вивід і необов’язкове пояснення.

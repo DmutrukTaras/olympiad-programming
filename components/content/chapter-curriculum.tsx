@@ -5,6 +5,7 @@ import {
   getProblemTypesForChapter,
 } from '@/lib/content-selectors';
 import type { Chapter } from '@/types/content';
+import { FinalMixedSet } from '@/components/content/final-mixed-set';
 
 export function ChapterCurriculum({ chapter }: { chapter: Chapter }) {
   const patterns = getPatternsForChapter(chapter.id);
@@ -47,7 +48,11 @@ export function ChapterCurriculum({ chapter }: { chapter: Chapter }) {
               ? 'Три патерни: перед задачею можна відкрити refresher потрібної теорії та C++17, далі пройти авторський розбір і закріпити матеріал двома вправами.'
               : chapter.level === 'combination'
                 ? 'Три патерни з акцентом на моделювання й комбінування: один повний авторський розбір і три вправи різного рівня на кожен патерн. Теоретичний refresher та extensions відкривай за потреби.'
-                : 'Для кожного патерну — авторська навчальна задача з розбором і 2–4 задачі для практики. Матеріали додаються поступово.'}
+                : chapter.level === 'advanced'
+                  ? 'Три складні патерни: для кожного є окрема сторінка з п’яти великих частин теорії, інтерактивна модель, повний авторський розбір і 3–4 вправи — від чистого застосування до прихованого патерну.'
+                  : chapter.level === 'challenge'
+                    ? 'Три capstone-патерни: п’ятичастинна теорія з доказом reduction, інтерактивне переформулювання, повний авторський розбір і три вправи — від варіації до прихованої комбінації.'
+                    : 'Для кожного патерну — авторська навчальна задача з розбором і 2–4 задачі для практики. Матеріали додаються поступово.'}
         </p>
         <div className="mt-7 space-y-4">
           {chapter.outline?.mainPatterns.map((group, index) => (
@@ -150,6 +155,8 @@ export function ChapterCurriculum({ chapter }: { chapter: Chapter }) {
           </ul>
         </section>
       )}
+
+      {chapter.id === 'ch-26' && <FinalMixedSet />}
 
       {groups.length > 0 && (
         <section

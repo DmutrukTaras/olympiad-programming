@@ -21,7 +21,15 @@ import { LearningTask } from '@/components/content/learning-task';
 import { PatternPreparation } from '@/components/content/pattern-preparation';
 import { PracticeTaskCard } from '@/components/content/practice-task-card';
 import { IntroductionLesson } from '@/components/content/introduction-lessons';
-import type { PracticeProblem } from '@/types/content';
+import { AdvancedVisual } from '@/components/content/advanced-visuals';
+import { ChallengeVisual } from '@/components/content/challenge-visuals';
+import { FinalMixedSet } from '@/components/content/final-mixed-set';
+import { finalMixedSet } from '@/content/final-mixed-set';
+import type {
+  AdvancedVisualKind,
+  ChallengeVisualKind,
+  PracticeProblem,
+} from '@/types/content';
 
 const unique = (items: string[]) =>
   assert.equal(new Set(items).size, items.length);
@@ -177,6 +185,143 @@ await test('Combination has 12 modeled patterns, 48 tasks and three practices pe
   }
 });
 
+await test('Advanced has 15 deep patterns, 66 tasks and an interactive for every pattern', () => {
+  const advanced = patterns.filter((pattern) => pattern.level === 'advanced');
+  const advancedIds = new Set(advanced.map((pattern) => pattern.id));
+  const advancedTasks = tasks.filter((task) =>
+    task.patternIds.some((id) => advancedIds.has(id)),
+  );
+  const fourPracticePatterns = new Set([
+    'string-hashing',
+    'bitmask-dp',
+    'scc-bridges-articulation',
+    'lca-binary-lifting',
+    'expected-value-probability',
+    'advanced-number-theory',
+  ]);
+
+  assert.equal(advanced.length, 15);
+  assert.equal(advancedTasks.length, 66);
+  for (const pattern of advanced) {
+    assert.equal(pattern.hasContent, true);
+    assert.equal(pattern.practiceStatus, 'complete');
+    assert.ok(pattern.intuition?.length, pattern.id);
+    assert.ok(pattern.modeling?.length, pattern.id);
+    assert.ok(pattern.priorKnowledge?.length, pattern.id);
+    assert.equal(pattern.preparation?.sections.length, 5, pattern.id);
+    assert.ok(
+      pattern.intuition?.some((block) => block.type === 'advanced-visual'),
+      pattern.id,
+    );
+
+    const items = getTasksForPattern(pattern.id);
+    assert.equal(items.filter((task) => task.kind === 'learning').length, 1);
+    assert.equal(
+      items.filter((task) => task.kind === 'practice').length,
+      fourPracticePatterns.has(pattern.id) ? 4 : 3,
+    );
+    for (const task of items) {
+      assert.equal(task.level, 'advanced');
+      assert.ok(task.examples?.length, task.id);
+      assert.ok(task.constraints.length, task.id);
+      if (task.kind === 'practice') assert.ok(task.hint?.trim(), task.id);
+    }
+  }
+});
+
+await test('all Advanced interactives render their four-step model', () => {
+  const kinds: AdvancedVisualKind[] = [
+    'kmp-fallback',
+    'z-box',
+    'rolling-hash',
+    'orientation',
+    'segment-intersection',
+    'convex-hull',
+    'subset-mask',
+    'bitmask-dp',
+    'meet-in-the-middle',
+    'graph-decomposition',
+    'binary-lifting',
+    'rerooting',
+    'inclusion-exclusion',
+    'expected-value',
+    'matrix-power',
+  ];
+  for (const kind of kinds) {
+    const html = renderToStaticMarkup(createElement(AdvancedVisual, { kind }));
+    assert.equal((html.match(/type="button"/g) ?? []).length, 6, kind);
+    assert.ok(html.includes('Наступний крок') && html.includes('Спочатку'));
+  }
+});
+
+await test('Challenge has 12 complete capstone patterns and 48 tasks', () => {
+  const challenge = patterns.filter((pattern) => pattern.level === 'challenge');
+  const challengeIds = new Set(challenge.map((pattern) => pattern.id));
+  const challengeTasks = tasks.filter((task) =>
+    task.patternIds.some((id) => challengeIds.has(id)),
+  );
+
+  assert.equal(challenge.length, 12);
+  assert.equal(challengeTasks.length, 48);
+  for (const pattern of challenge) {
+    assert.equal(pattern.hasContent, true);
+    assert.equal(pattern.practiceStatus, 'complete');
+    assert.ok(pattern.intuition?.length, pattern.id);
+    assert.ok(pattern.modeling?.length, pattern.id);
+    assert.ok(pattern.priorKnowledge?.length, pattern.id);
+    assert.equal(pattern.preparation?.sections.length, 5, pattern.id);
+    assert.ok(
+      pattern.intuition?.some((block) => block.type === 'challenge-visual'),
+      pattern.id,
+    );
+
+    const items = getTasksForPattern(pattern.id);
+    assert.equal(items.filter((task) => task.kind === 'learning').length, 1);
+    assert.equal(items.filter((task) => task.kind === 'practice').length, 3);
+    for (const task of items) {
+      assert.equal(task.level, 'challenge');
+      assert.ok(task.examples?.length, task.id);
+      assert.ok(task.constraints.length, task.id);
+      if (task.kind === 'practice') assert.ok(task.hint?.trim(), task.id);
+    }
+  }
+});
+
+await test('all Challenge interactives render the reduction as four steps', () => {
+  const kinds: ChallengeVisualKind[] = [
+    'augmenting-path',
+    'residual-flow',
+    'min-cut-model',
+    'divide-conquer-opt',
+    'knuth-window',
+    'cht-lines',
+    'game-states',
+    'nim-xor',
+    'grundy-mex',
+    'state-expansion',
+    'reverse-time',
+    'hld-decomposition',
+  ];
+  for (const kind of kinds) {
+    const html = renderToStaticMarkup(createElement(ChallengeVisual, { kind }));
+    assert.equal((html.match(/type="button"/g) ?? []).length, 6, kind);
+    assert.ok(html.includes('Наступний крок') && html.includes('Спочатку'));
+  }
+});
+
+await test('final mixed checkpoint has ten unlabeled tasks without hints', () => {
+  assert.equal(finalMixedSet.length, 10);
+  unique(finalMixedSet.map((task) => task.id));
+  for (const task of finalMixedSet) {
+    assert.ok(task.title && task.statement && task.input && task.output);
+    assert.ok(task.constraints.length);
+  }
+  const html = renderToStaticMarkup(createElement(FinalMixedSet));
+  assert.equal((html.match(/<details/g) ?? []).length, 10);
+  assert.ok(!html.includes('Відкрити одну підказку'));
+  assert.ok(!html.includes('Самостійна практика'));
+});
+
 await test('Foundation revisions keep routes and distinguish core content from extensions', () => {
   const prefix = patterns.find((pattern) => pattern.id === 'prefix-sum');
   const grid = patterns.find((pattern) => pattern.id === 'prefix-xor-2d');
@@ -276,9 +421,15 @@ await test('every published pattern has expanded material for its dedicated theo
     foundation: 360,
     core: 280,
     combination: 330,
+    advanced: 500,
+    challenge: 500,
   } as const;
 
-  const blockText = (block: NonNullable<(typeof published)[number]['preparation']>['sections'][number]['blocks'][number]) => {
+  const blockText = (
+    block: NonNullable<
+      (typeof published)[number]['preparation']
+    >['sections'][number]['blocks'][number],
+  ) => {
     if (block.type === 'paragraph') return block.text;
     if (block.type === 'callout') return `${block.title} ${block.text}`;
     if (block.type === 'list') return block.items.join(' ');
@@ -306,7 +457,9 @@ await test('every published pattern has expanded material for its dedicated theo
     'utf8',
   );
   assert.ok(route.includes('generateStaticParams'));
-  assert.ok(route.includes('<PatternPreparation content={pattern.preparation} />'));
+  assert.ok(
+    route.includes('<PatternPreparation content={pattern.preparation} />'),
+  );
 });
 
 await test('intro explains total input, verdicts and explicitly marks future algorithms as preview', () => {
@@ -403,7 +556,7 @@ await test('all 14 task categories reference the same chapters, with reverse rel
     [6, 10, 18],
     [7, 9, 11, 19, 22],
     [14, 15, 21, 23],
-    [9, 12, 26],
+    [9, 12, 25, 26],
   ];
   problemTypeGroups.forEach((group, index) => {
     assert.ok(group.topics.length > 0);

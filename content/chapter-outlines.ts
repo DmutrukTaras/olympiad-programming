@@ -138,7 +138,7 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
     [
       pattern('prefix-function-kmp', 'Prefix Function / KMP'),
       pattern('z-function', 'Z-function'),
-      pattern('string-hashing', 'Hashing'),
+      pattern('string-hashing', 'String Hashing'),
     ],
     ['Trie', 'Manacher', 'Aho-Corasick', 'Suffix Array'],
     ['Suffix Automaton'],
@@ -146,7 +146,7 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
   'ch-19': outline(
     [
       pattern('points-vectors-cross', 'Точки, вектори, cross product'),
-      pattern('intersections-conditions', 'Перетини та геометричні умови'),
+      pattern('intersections-conditions', 'Segment Intersections'),
       pattern('convex-hull', 'Convex Hull'),
     ],
     [
@@ -185,9 +185,12 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
   ),
   'ch-22': outline(
     [
-      pattern('combinatorics', 'Combinatorics'),
+      pattern('combinatorics', 'Combinatorics / Inclusion–Exclusion'),
       pattern('expected-value-probability', 'Expected Value / Probability'),
-      pattern('advanced-number-theory', 'Advanced Number Theory'),
+      pattern(
+        'advanced-number-theory',
+        'Advanced Number Theory / Linear Recurrences',
+      ),
     ],
     [
       'Inclusion–Exclusion',
@@ -202,18 +205,32 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
   'ch-23': outline(
     [
       pattern('bipartite-matching', 'Bipartite Matching'),
-      pattern('max-flow-min-cut', 'Maximum Flow / Min Cut'),
-      pattern('flow-reformulation', 'Переформулювання задачі через flow'),
+      pattern('max-flow-min-cut', 'Maximum Flow / Residual Graph'),
+      pattern('flow-reformulation', 'Flow Modeling / Min Cut / Costs'),
     ],
-    ['Min-Cost Max-Flow', 'Assignment Problem / Hungarian Algorithm'],
+    [
+      'Hopcroft–Karp',
+      'Vertex Splitting',
+      'Min-Cost Max-Flow',
+      'Assignment Problem / Hungarian Algorithm',
+    ],
   ),
   'ch-24': outline(
     [
-      pattern('slow-dp', 'DP правильне, але занадто повільне'),
+      pattern(
+        'divide-conquer-optimization',
+        'Divide & Conquer DP Optimization',
+      ),
+      pattern('knuth-optimization', 'Knuth Optimization'),
       pattern('cht-li-chao', 'Convex Hull Trick / Li Chao'),
-      pattern('divide-conquer-optimization', 'Divide & Conquer Optimization'),
     ],
-    ['Knuth Optimization', 'Lagrangian Relaxation / Aliens Trick'],
+    [
+      'Lagrangian Relaxation / Aliens Trick',
+      'Monotone Queue Optimization',
+      'Bitset Optimization',
+      'SOS DP',
+      'Profile DP',
+    ],
   ),
   'ch-25': outline(
     [
@@ -221,16 +238,25 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
       pattern('nim-xor', 'Nim / XOR'),
       pattern('sprague-grundy', 'Sprague–Grundy'),
     ],
-    ['Інваріанти', 'Симетрія', 'Нетривіальні ігрові конструкції'],
+    [
+      'Misère Nim',
+      'Games on DAG',
+      'Grundy Periodicity',
+      'Retrograde Analysis',
+      'Симетрія та інваріанти',
+    ],
   ),
   'ch-26': outline(
     [
-      pattern('change-representation', 'Перейти до іншого представлення'),
+      pattern('state-graph-implicit-graph', 'State Graph / Implicit Graph'),
       pattern(
-        'algebraic-telescoping',
-        'Algebraic / Telescoping Transformation',
+        'offline-reverse-rollback',
+        'Offline / Reverse Process / Rollback',
       ),
-      pattern('combine-algorithms', 'Комбінувати кілька відомих алгоритмів'),
+      pattern(
+        'decomposition-multi-pattern',
+        'Decomposition / Multi-Pattern Problems',
+      ),
     ],
     [
       'Binary Search + Greedy',
@@ -241,6 +267,7 @@ export const chapterOutlines: Record<string, ChapterOutline> = {
       'Geometry + Number Theory',
       'Sorting + Greedy',
       'Prefix + Hashing',
+      'Final Mixed Set · без назв патернів і підказок',
     ],
   ),
 };

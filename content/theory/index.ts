@@ -1,3 +1,5 @@
+import { advancedTheoryAdditions } from '@/content/theory/advanced';
+import { challengeTheoryAdditions } from '@/content/theory/challenge';
 import { combinationTheoryAdditions } from '@/content/theory/combination';
 import { coreTheoryAdditions } from '@/content/theory/core';
 import { foundationTheoryAdditions } from '@/content/theory/foundation';
@@ -7,4 +9,6 @@ export const theoryAdditions: Record<string, TheorySections> = {
   ...foundationTheoryAdditions,
   ...coreTheoryAdditions,
   ...combinationTheoryAdditions,
+  ...advancedTheoryAdditions,
+  ...challengeTheoryAdditions,
 };

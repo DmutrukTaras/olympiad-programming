@@ -23,6 +23,8 @@ export type ContentBlock =
   | { type: 'visual'; kind: FoundationVisualKind }
   | { type: 'core-visual'; kind: CoreVisualKind }
   | { type: 'combination-visual'; kind: CombinationVisualKind }
+  | { type: 'advanced-visual'; kind: AdvancedVisualKind }
+  | { type: 'challenge-visual'; kind: ChallengeVisualKind }
   | { type: 'table'; columns: string[]; rows: string[][] }
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
@@ -58,6 +60,37 @@ export type CombinationVisualKind =
   | 'kruskal'
   | 'dp-grid'
   | 'range-structures';
+
+export type AdvancedVisualKind =
+  | 'kmp-fallback'
+  | 'z-box'
+  | 'rolling-hash'
+  | 'orientation'
+  | 'segment-intersection'
+  | 'convex-hull'
+  | 'subset-mask'
+  | 'bitmask-dp'
+  | 'meet-in-the-middle'
+  | 'graph-decomposition'
+  | 'binary-lifting'
+  | 'rerooting'
+  | 'inclusion-exclusion'
+  | 'expected-value'
+  | 'matrix-power';
+
+export type ChallengeVisualKind =
+  | 'augmenting-path'
+  | 'residual-flow'
+  | 'min-cut-model'
+  | 'divide-conquer-opt'
+  | 'knuth-window'
+  | 'cht-lines'
+  | 'game-states'
+  | 'nim-xor'
+  | 'grundy-mex'
+  | 'state-expansion'
+  | 'reverse-time'
+  | 'hld-decomposition';
 
 export interface TaskExample {
   input: string;
