@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils';
 const links = [
   { href: '/contents', label: 'Зміст' },
   { href: '/tasks', label: 'Задачі' },
-  { href: '/trainer', label: 'Вгадай патерн' },
+  { href: '/trainer/pattern', label: 'Вгадай патерн' },
+  { href: '/trainer/complexity', label: 'Визначте Big O' },
 ];
 
 export function DesktopNavigation() {
@@ -15,7 +16,7 @@ export function DesktopNavigation() {
 
   return (
     <nav
-      className="mr-3 hidden items-center gap-1 md:flex"
+      className="mr-3 hidden items-center gap-1 lg:flex"
       aria-label="Основна навігація"
     >
       {links.map(({ href, label }) => {

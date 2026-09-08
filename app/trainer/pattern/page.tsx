@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     'Тренажер розпізнавання алгоритмічних патернів за умовою та constraints.',
 };
 
-export default function TrainerPage() {
+export default function PatternTrainerPage() {
   const catalog = buildTrainerCatalog(tasks, patterns, problemTypeGroups);
 
   return (

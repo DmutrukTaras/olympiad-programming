@@ -9,12 +9,13 @@ import {
   ExternalLink,
   RotateCcw,
   Target,
-  X,
   XCircle,
 } from 'lucide-react';
 import { LevelBadge } from '@/components/content/level-badge';
 import { TaskExamples } from '@/components/content/task-examples';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { TrainerOptionCard } from '@/components/trainer/trainer-option-card';
+import { TrainerProgress } from '@/components/trainer/trainer-progress';
 import { levelOrder } from '@/content/levels';
 import {
   createTrainerSession,
@@ -281,26 +282,15 @@ export function PatternTrainer({ catalog }: { catalog: TrainerCatalog }) {
 
   return (
     <section className="mt-9" aria-label="Сесія тренажера">
-      <div className="mb-7 rounded-2xl border border-border bg-card px-5 py-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
-          <div className="flex items-center gap-3">
-            <span className="font-semibold">
-              Задача {questionIndex + 1} з {session.questions.length}
-            </span>
-            {currentLevel && <LevelBadge level={currentLevel} compact />}
-          </div>
-          <span className="text-muted-foreground">
-            Правильно:{' '}
-            <strong className="text-foreground">{correctCount}</strong>
-          </span>
-        </div>
-        <progress
-          className="mt-3 block h-1.5 w-full overflow-hidden rounded-full bg-muted accent-primary [&::-moz-progress-bar]:bg-primary [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:bg-primary"
-          aria-label="Прогрес тренування"
-          max={session.questions.length}
-          value={questionIndex + 1}
-        />
-      </div>
+      <TrainerProgress
+        current={questionIndex + 1}
+        total={session.questions.length}
+        correct={correctCount}
+        itemLabel="Задача"
+        context={
+          currentLevel ? <LevelBadge level={currentLevel} compact /> : undefined
+        }
+      />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.28fr)_minmax(20rem,0.72fr)]">
         <article className="overflow-hidden rounded-3xl border border-border bg-card">
@@ -377,58 +367,24 @@ export function PatternTrainer({ catalog }: { catalog: TrainerCatalog }) {
                 const correct =
                   answerLocked && pattern.id === question.primaryPattern.id;
                 const wrong = answerLocked && selected && !correct;
+                const state = correct
+                  ? 'correct'
+                  : wrong
+                    ? 'wrong'
+                    : selected
+                      ? 'selected'
+                      : 'idle';
                 return (
-                  <label
+                  <TrainerOptionCard
                     key={pattern.id}
-                    aria-label={pattern.title}
-                    className={cn(
-                      'relative cursor-pointer rounded-xl border border-border bg-background p-3.5 transition-colors hover:border-primary/45 has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50',
-                      selected &&
-                        !answerLocked &&
-                        'border-primary/60 bg-primary/5',
-                      correct && 'border-primary bg-primary/10',
-                      wrong && 'border-destructive bg-destructive/10',
-                      answerLocked && 'cursor-default',
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name={`trainer-answer-${question.task.id}`}
-                      value={pattern.id}
-                      checked={selected}
-                      onChange={() => setSelectedPatternId(pattern.id)}
-                      className="sr-only"
-                    />
-                    <span className="flex items-start gap-3">
-                      <span
-                        className={cn(
-                          'mt-0.5 grid size-5 shrink-0 place-items-center rounded-full border border-border',
-                          selected && 'border-primary',
-                          correct &&
-                            'border-primary bg-primary text-primary-foreground',
-                          wrong &&
-                            'border-destructive bg-destructive text-white',
-                        )}
-                        aria-hidden="true"
-                      >
-                        {correct && <Check className="size-3" />}
-                        {wrong && <X className="size-3" />}
-                      </span>
-                      <span className="min-w-0 text-sm font-medium leading-5">
-                        {pattern.title}
-                        {correct && (
-                          <span className="mt-1 block text-xs font-normal text-primary">
-                            Правильна відповідь
-                          </span>
-                        )}
-                        {wrong && (
-                          <span className="mt-1 block text-xs font-normal text-destructive">
-                            Твоя відповідь
-                          </span>
-                        )}
-                      </span>
-                    </span>
-                  </label>
+                    name={`trainer-answer-${question.task.id}`}
+                    value={pattern.id}
+                    label={pattern.title}
+                    checked={selected}
+                    disabled={answerLocked}
+                    state={state}
+                    onChange={() => setSelectedPatternId(pattern.id)}
+                  />
                 );
               })}
             </div>

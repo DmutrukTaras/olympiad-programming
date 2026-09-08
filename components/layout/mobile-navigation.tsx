@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, ListTree, Menu, Target } from 'lucide-react';
+import { BookOpen, Gauge, ListTree, Menu, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -18,7 +18,8 @@ import { cn } from '@/lib/utils';
 const links = [
   { href: '/contents', label: 'Зміст', icon: ListTree },
   { href: '/tasks', label: 'Задачі', icon: BookOpen },
-  { href: '/trainer', label: 'Вгадай патерн', icon: Target },
+  { href: '/trainer/pattern', label: 'Вгадай патерн', icon: Target },
+  { href: '/trainer/complexity', label: 'Визначте Big O', icon: Gauge },
 ];
 
 export function MobileNavigation() {
@@ -31,7 +32,7 @@ export function MobileNavigation() {
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full md:hidden"
+            className="rounded-full lg:hidden"
           />
         }
       >

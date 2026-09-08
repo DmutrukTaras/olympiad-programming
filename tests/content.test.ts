@@ -25,6 +25,8 @@ import { AdvancedVisual } from '@/components/content/advanced-visuals';
 import { ChallengeVisual } from '@/components/content/challenge-visuals';
 import { FinalMixedSet } from '@/components/content/final-mixed-set';
 import { finalMixedSet } from '@/content/final-mixed-set';
+import { complexityQuestions } from '@/content/complexity-questions';
+import { createComplexitySession } from '@/lib/complexity-trainer';
 import { buildTrainerCatalog, createTrainerSession } from '@/lib/trainer';
 import type {
   AdvancedVisualKind,
@@ -808,7 +810,7 @@ await test('trainer honors curated feedback and handles a pool smaller than ten'
   assert.ok(question.feedbackByPatternId['difference-array']);
 });
 
-await test('trainer setup and navigation expose the new route accessibly', async () => {
+await test('pattern trainer moved to its own route and shares accessible controls', async () => {
   const trainer = await readFile(
     new URL('../components/trainer/pattern-trainer.tsx', import.meta.url),
     'utf8',
@@ -826,9 +828,102 @@ await test('trainer setup and navigation expose the new route accessibly', async
   assert.ok(trainer.includes('aria-live="polite"'));
   assert.ok(trainer.includes('type="radio"'));
   assert.ok(
-    desktop.includes("href: '/trainer'") && desktop.includes('aria-current'),
+    desktop.includes("href: '/trainer/pattern'") &&
+      desktop.includes("href: '/trainer/complexity'") &&
+      desktop.includes('aria-current'),
   );
   assert.ok(
-    mobile.includes("href: '/trainer'") && mobile.includes('aria-current'),
+    mobile.includes("href: '/trainer/pattern'") &&
+      mobile.includes("href: '/trainer/complexity'") &&
+      mobile.includes('aria-current'),
+  );
+
+  const route = await readFile(
+    new URL('../app/trainer/pattern/page.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.ok(route.includes('<PatternTrainer catalog={catalog} />'));
+});
+
+await test('Big O dataset contains at least 30 code and 10 constraint questions', () => {
+  const code = complexityQuestions.filter((item) => item.type === 'code');
+  const constraints = complexityQuestions.filter(
+    (item) => item.type === 'constraints',
+  );
+  assert.ok(code.length >= 30);
+  assert.ok(constraints.length >= 10);
+  unique(complexityQuestions.map((item) => item.id));
+
+  for (const item of complexityQuestions) {
+    assert.ok(item.question && item.explanation && item.wrongAnswerNote);
+    assert.ok(item.concept);
+    assert.ok(item.options.length >= 4 && item.options.length <= 6);
+    unique(item.options.map((option) => option.id));
+    assert.equal(
+      item.options.filter((option) => option.id === item.correctOptionId)
+        .length,
+      1,
+    );
+    if (item.type === 'code') assert.ok(item.code && item.language);
+    else assert.ok(item.constraints?.length);
+  }
+
+  const concepts = new Set(complexityQuestions.map((item) => item.concept));
+  for (const concept of [
+    'amortized complexity',
+    'graph complexity',
+    'DP dimensions',
+    'submask enumeration',
+    'constraints',
+  ]) {
+    assert.ok(concepts.has(concept), concept);
+  }
+});
+
+await test('every Big O mode creates ten unique randomized questions', () => {
+  for (const mode of ['mixed', 'code', 'constraints'] as const) {
+    let seed = 17;
+    const random = () => {
+      seed = (seed * 1103515245 + 12345) >>> 0;
+      return seed / 4294967296;
+    };
+    const session = createComplexitySession(complexityQuestions, mode, random);
+    assert.equal(session.questions.length, 10);
+    unique(session.questions.map((item) => item.id));
+    for (const item of session.questions) {
+      assert.equal(
+        item.options.filter((option) => option.id === item.correctOptionId)
+          .length,
+        1,
+      );
+      if (mode !== 'mixed') assert.equal(item.type, mode);
+    }
+  }
+});
+
+await test('Big O trainer uses shared progress and answer cards with locked feedback', async () => {
+  const source = await readFile(
+    new URL('../components/trainer/complexity-trainer.tsx', import.meta.url),
+    'utf8',
+  );
+  const patternSource = await readFile(
+    new URL('../components/trainer/pattern-trainer.tsx', import.meta.url),
+    'utf8',
+  );
+  for (const component of ['TrainerProgress', 'TrainerOptionCard']) {
+    assert.ok(source.includes(component));
+    assert.ok(patternSource.includes(component));
+  }
+  assert.ok(source.includes('disabled={answerLocked}'));
+  assert.ok(source.includes('aria-live="polite"'));
+  assert.ok(source.includes('Наступне питання'));
+  assert.ok(source.includes('До задач'));
+
+  const route = await readFile(
+    new URL('../app/trainer/complexity/page.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.ok(
+    route.includes('<ComplexityTrainer questions={complexityQuestions} />'),
   );
 });
