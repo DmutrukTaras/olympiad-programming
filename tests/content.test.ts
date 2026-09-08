@@ -25,6 +25,7 @@ import { AdvancedVisual } from '@/components/content/advanced-visuals';
 import { ChallengeVisual } from '@/components/content/challenge-visuals';
 import { FinalMixedSet } from '@/components/content/final-mixed-set';
 import { finalMixedSet } from '@/content/final-mixed-set';
+import { buildTrainerCatalog, createTrainerSession } from '@/lib/trainer';
 import type {
   AdvancedVisualKind,
   ChallengeVisualKind,
@@ -741,5 +742,93 @@ await test('Algotester button exists only with an external URL', () => {
   assert.ok(
     linkedHtml.includes('Розв’язати на Algotester') &&
       linkedHtml.includes('href="https://algotester.com/"'),
+  );
+});
+
+await test('trainer derives a spoiler-free catalog from the existing content', () => {
+  const catalog = buildTrainerCatalog(tasks, patterns, problemTypeGroups);
+  assert.ok(catalog.tasks.length > 0);
+  assert.equal(
+    catalog.patterns.length,
+    patterns.filter((item) => item.hasContent).length,
+  );
+
+  const source = tasks.find((task) => task.id === 'shop-sales');
+  const trainerTask = catalog.tasks.find((task) => task.id === 'shop-sales');
+  assert.ok(source && trainerTask);
+  assert.deepEqual(trainerTask.statement, source.statement);
+  assert.ok(!('hint' in trainerTask));
+  assert.ok(!('stages' in trainerTask));
+  assert.ok(
+    trainerTask.examples?.every((example) => !('explanation' in example)),
+  );
+});
+
+await test('trainer creates ten unique questions with eight plausible unique options', () => {
+  const catalog = buildTrainerCatalog(tasks, patterns, problemTypeGroups);
+  let seed = 42;
+  const random = () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  const session = createTrainerSession(catalog, 'foundation', random);
+
+  assert.equal(session.questions.length, 10);
+  unique(session.questions.map((question) => question.task.id));
+  for (const question of session.questions) {
+    assert.equal(question.options.length, 8);
+    unique(question.options.map((option) => option.id));
+    assert.equal(
+      question.options.filter(
+        (option) => option.id === question.primaryPattern.id,
+      ).length,
+      1,
+    );
+    assert.ok(
+      question.options.every((option) => option.level === 'foundation'),
+    );
+  }
+});
+
+await test('trainer honors curated feedback and handles a pool smaller than ten', () => {
+  const catalog = buildTrainerCatalog(tasks, patterns, problemTypeGroups);
+  const shopSales = catalog.tasks.find((task) => task.id === 'shop-sales');
+  assert.ok(shopSales?.trainer);
+  const smallCatalog = { ...catalog, tasks: [shopSales] };
+  const session = createTrainerSession(smallCatalog, 'foundation', () => 0.25);
+
+  assert.equal(session.questions.length, 1);
+  const [question] = session.questions;
+  assert.equal(question.options.length, 8);
+  for (const id of shopSales.trainer.distractorPatternIds ?? []) {
+    assert.ok(question.options.some((option) => option.id === id));
+  }
+  assert.equal(question.explanation, shopSales.trainer.explanation);
+  assert.deepEqual(question.signals, shopSales.trainer.signals);
+  assert.ok(question.feedbackByPatternId['difference-array']);
+});
+
+await test('trainer setup and navigation expose the new route accessibly', async () => {
+  const trainer = await readFile(
+    new URL('../components/trainer/pattern-trainer.tsx', import.meta.url),
+    'utf8',
+  );
+  const desktop = await readFile(
+    new URL('../components/layout/desktop-navigation.tsx', import.meta.url),
+    'utf8',
+  );
+  const mobile = await readFile(
+    new URL('../components/layout/mobile-navigation.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.ok(trainer.includes('name="trainer-level"'));
+  assert.ok(trainer.includes('Почати тренування'));
+  assert.ok(trainer.includes('aria-live="polite"'));
+  assert.ok(trainer.includes('type="radio"'));
+  assert.ok(
+    desktop.includes("href: '/trainer'") && desktop.includes('aria-current'),
+  );
+  assert.ok(
+    mobile.includes("href: '/trainer'") && mobile.includes('aria-current'),
   );
 });

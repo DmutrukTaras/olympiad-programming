@@ -67,7 +67,7 @@ export function pattern({
 
 type ProblemInput = Pick<
   LearningProblem,
-  'id' | 'title' | 'statement' | 'input' | 'output' | 'constraints'
+  'id' | 'title' | 'statement' | 'input' | 'output' | 'constraints' | 'trainer'
 > & { examples: TaskExample[] };
 
 type LessonInput = ProblemInput & {

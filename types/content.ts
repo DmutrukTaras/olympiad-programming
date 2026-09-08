@@ -98,6 +98,15 @@ export interface TaskExample {
   explanation?: string;
 }
 
+export interface TrainerTaskMetadata {
+  enabled?: boolean;
+  primaryPatternId?: string;
+  distractorPatternIds?: string[];
+  explanation?: string;
+  signals?: string[];
+  feedbackByPatternId?: Record<string, string>;
+}
+
 export interface Chapter {
   id: string;
   slug: string;
@@ -168,6 +177,7 @@ interface TaskBase {
   output: string;
   constraints: string[];
   examples?: TaskExample[];
+  trainer?: TrainerTaskMetadata;
   hint?: string;
   stages: TaskStage[];
   hasEditorial: boolean;
