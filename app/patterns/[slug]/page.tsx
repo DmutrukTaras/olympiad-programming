@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
   ArrowRight,
+  BookOpen,
   Check,
   ChevronLeft,
   Gauge,
@@ -12,7 +13,6 @@ import {
 import { ContentBlocks } from '@/components/content/content-blocks';
 import { LearningTask } from '@/components/content/learning-task';
 import { LevelBadge } from '@/components/content/level-badge';
-import { PatternPreparation } from '@/components/content/pattern-preparation';
 import { PracticeTaskCard } from '@/components/content/practice-task-card';
 import { chapters, patterns } from '@/content';
 import { practiceTaskRange } from '@/content/task-template';
@@ -99,9 +99,12 @@ export default async function PatternPage({ params }: PatternPageProps) {
               Коли НЕ підходить
             </a>
             {pattern.preparation && (
-              <a href="#preparation" className="article-nav-link">
+              <Link
+                href={`/patterns/${pattern.slug}/theory`}
+                className="article-nav-link"
+              >
                 Теорія та C++
-              </a>
+              </Link>
             )}
             <a href="#task" className="article-nav-link">
               Навчальна задача
@@ -150,6 +153,33 @@ export default async function PatternPage({ params }: PatternPageProps) {
               {pattern.description}
             </p>
           </header>
+
+          {pattern.preparation && (
+            <section id="preparation" className="scroll-mt-28 py-6">
+              <Link
+                href={`/patterns/${pattern.slug}/theory`}
+                className="group flex items-start gap-4 rounded-2xl border border-primary/25 bg-primary/[0.055] p-5 transition-colors hover:border-primary/45 hover:bg-primary/[0.08] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:p-6"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-background text-primary">
+                  <BookOpen className="size-5" aria-hidden="true" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="eyebrow">Перед зануренням у патерн</span>
+                  <span className="mt-2 block text-lg font-semibold tracking-tight">
+                    Теорія та C++: заповнити прогалини
+                  </span>
+                  <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+                    Окрема сторінка з поняттями, прикладами, потрібними
+                    операціями C++17 і типовими помилками.
+                  </span>
+                </span>
+                <ArrowRight
+                  className="mt-2 size-5 shrink-0 text-primary transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Link>
+            </section>
+          )}
 
           {pattern.intuition && (
             <section
@@ -255,10 +285,6 @@ export default async function PatternPage({ params }: PatternPageProps) {
               ))}
             </ul>
           </section>
-
-          {pattern.preparation && (
-            <PatternPreparation content={pattern.preparation} />
-          )}
 
           {learningTask && (
             <section

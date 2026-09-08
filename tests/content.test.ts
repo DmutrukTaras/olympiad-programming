@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { chapters, patterns, problemTypeGroups, tasks } from '@/content';
 import { chapterOutlines } from '@/content/chapter-outlines';
 import { foundationPreparation } from '@/content/foundation/preparation';
+import { theoryAdditions } from '@/content/theory';
 import {
   createLearningStages,
   learningStageDefinitions,
@@ -63,15 +64,13 @@ await test('every Foundation pattern has beginner preparation with C++ examples 
   }
 });
 
-await test('preparation and its self-check answers are collapsed by default without client state', () => {
+await test('theory content is open on its page while self-check answers stay collapsed', () => {
   for (const content of Object.values(foundationPreparation)) {
     const html = renderToStaticMarkup(
       createElement(PatternPreparation, { content }),
     );
-    assert.ok(html.includes('id="preparation"'));
-    assert.ok(html.includes('Теорія та C++: заповнити прогалини'));
     const details = html.match(/<details\b[^>]*>/g) ?? [];
-    assert.equal(details.length, 1 + content.questions.length);
+    assert.equal(details.length, content.questions.length);
     for (const tag of details) assert.doesNotMatch(tag, /\sopen(?:\s|=|>)/);
     assert.equal((html.match(/<summary\b/g) ?? []).length, details.length);
   }
@@ -110,7 +109,7 @@ await test('Foundation has exactly 12 complete patterns, each with one lesson an
   }
 });
 
-await test('Core has 12 complete patterns, 36 tasks and collapsible implementation notes', () => {
+await test('Core has 12 complete patterns, 36 tasks and dedicated theory content', () => {
   const core = patterns.filter((pattern) => pattern.level === 'core');
   const coreIds = new Set(core.map((pattern) => pattern.id));
   const coreTasks = tasks.filter((task) =>
@@ -134,7 +133,7 @@ await test('Core has 12 complete patterns, 36 tasks and collapsible implementati
     const html = renderToStaticMarkup(
       createElement(PatternPreparation, { content: pattern.preparation! }),
     );
-    assert.equal((html.match(/<details\b/g) ?? []).length, 1);
+    assert.equal((html.match(/<details\b/g) ?? []).length, 0);
     assert.doesNotMatch(html, /<details\b[^>]*\sopen(?:\s|=|>)/);
 
     const items = getTasksForPattern(pattern.id);
@@ -165,7 +164,8 @@ await test('Combination has 12 modeled patterns, 48 tasks and three practices pe
     assert.ok(pattern.intuition?.length, pattern.id);
     assert.ok(pattern.modeling?.length, pattern.id);
     assert.ok(pattern.priorKnowledge?.length, pattern.id);
-    assert.ok(pattern.preparation?.sections.length === 2, pattern.id);
+    assert.ok(pattern.preparation, pattern.id);
+    assert.ok(pattern.preparation.sections.length >= 2, pattern.id);
     const items = getTasksForPattern(pattern.id);
     assert.equal(items.filter((task) => task.kind === 'learning').length, 1);
     assert.equal(items.filter((task) => task.kind === 'practice').length, 3);
@@ -239,28 +239,74 @@ await test('Foundation revisions keep routes and distinguish core content from e
   );
 });
 
-await test('pattern template presents concepts before optional C++ notes and the learning task', async () => {
+await test('pattern template links theory immediately after the main idea', async () => {
   const source = await readFile(
     new URL('../app/patterns/[slug]/page.tsx', import.meta.url),
     'utf8',
   );
   const sections = [
     ...source.matchAll(
-      /id="(overview|intuition|modeling|recognize|constraints|not-applicable|task|theory|practice)"|<PatternPreparation content=/g,
+      /id="(overview|preparation|intuition|modeling|recognize|constraints|not-applicable|task|theory|practice)"/g,
     ),
-  ].map((match) => match[1] ?? 'preparation');
+  ].map((match) => match[1]);
   assert.deepEqual(sections, [
     'overview',
+    'preparation',
     'intuition',
     'modeling',
     'recognize',
     'constraints',
     'not-applicable',
-    'preparation',
     'task',
     'theory',
     'practice',
   ]);
+  assert.ok(source.includes('href={`/patterns/${pattern.slug}/theory`}'));
+  assert.ok(!source.includes('<PatternPreparation content='));
+});
+
+await test('every published pattern has expanded material for its dedicated theory page', async () => {
+  const published = patterns.filter((pattern) => pattern.hasContent);
+  assert.deepEqual(
+    Object.keys(theoryAdditions).sort(),
+    published.map((pattern) => pattern.id).sort(),
+  );
+
+  const minimumWords = {
+    foundation: 360,
+    core: 280,
+    combination: 330,
+  } as const;
+
+  const blockText = (block: NonNullable<(typeof published)[number]['preparation']>['sections'][number]['blocks'][number]) => {
+    if (block.type === 'paragraph') return block.text;
+    if (block.type === 'callout') return `${block.title} ${block.text}`;
+    if (block.type === 'list') return block.items.join(' ');
+    if (block.type === 'table') return block.rows.flat().join(' ');
+    if (block.type === 'code') return block.caption ?? '';
+    return '';
+  };
+
+  for (const pattern of published) {
+    assert.ok(pattern.preparation, pattern.id);
+    const prose = [
+      pattern.preparation.introduction,
+      ...pattern.preparation.sections.flatMap((section) => [
+        section.title,
+        ...section.blocks.map(blockText),
+      ]),
+    ].join(' ');
+    const words = prose.trim().split(/\s+/u).length;
+    const target = minimumWords[pattern.level as keyof typeof minimumWords];
+    assert.ok(words >= target, `${pattern.id}: ${words} < ${target}`);
+  }
+
+  const route = await readFile(
+    new URL('../app/patterns/[slug]/theory/page.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.ok(route.includes('generateStaticParams'));
+  assert.ok(route.includes('<PatternPreparation content={pattern.preparation} />'));
 });
 
 await test('intro explains total input, verdicts and explicitly marks future algorithms as preview', () => {

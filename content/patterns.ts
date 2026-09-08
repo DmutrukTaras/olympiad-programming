@@ -4,6 +4,21 @@ import { combinationPatterns } from '@/content/combination';
 import { corePatterns } from '@/content/core';
 import { foundationPatterns } from '@/content/foundation';
 import { foundationPreparation } from '@/content/foundation/preparation';
+import { theoryAdditions } from '@/content/theory';
+
+const extendPreparation = (pattern: Pattern): Pattern => {
+  if (!pattern.preparation) return pattern;
+  return {
+    ...pattern,
+    preparation: {
+      ...pattern.preparation,
+      sections: [
+        ...pattern.preparation.sections,
+        ...(theoryAdditions[pattern.id] ?? []),
+      ],
+    },
+  };
+};
 
 const publishedPatterns: Record<string, Pattern> = Object.fromEntries(
   [
@@ -13,7 +28,7 @@ const publishedPatterns: Record<string, Pattern> = Object.fromEntries(
     })),
     ...corePatterns,
     ...combinationPatterns,
-  ].map((pattern) => [pattern.id, pattern]),
+  ].map(extendPreparation).map((pattern) => [pattern.id, pattern]),
 );
 
 // Drafts come from the chapter outline, so navigation cannot drift away from it.
