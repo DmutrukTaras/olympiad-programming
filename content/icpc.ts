@@ -1,11 +1,13 @@
 import type { ContentBlock } from '@/types/content';
 import { ukraine2025Contest } from '@/content/icpc/ukraine-2025-stage-1';
+import { ukraine2024Stage2Contest } from '@/content/icpc/ukraine-2024-stage-2';
 
 export interface IcpcProblem {
   letter: string;
   slug: string;
   title: string;
   archiveId: number;
+  externalUrl?: string;
   difficulty: 'Базова' | 'Легка' | 'Середня' | 'Складна';
   summary: string;
   patterns: { label: string; theoryId: string; signal: string }[];
@@ -775,10 +777,12 @@ export const icpcProblems: IcpcProblem[] = [
 export const icpcContests = [
   { ...icpcContest, problems: icpcProblems },
   ukraine2025Contest,
+  ukraine2024Stage2Contest,
 ];
 export const icpcProblemHref = (
   problem: IcpcProblem,
   contestSlug = icpcContest.slug,
 ) => `/icpc/${contestSlug}/${problem.slug}`;
 export const icpcSourceUrl = (problem: IcpcProblem) =>
+  problem.externalUrl ??
   `https://algotester.com/uk/ArchiveProblem/Display/${problem.archiveId}`;
