@@ -102,6 +102,24 @@ await test('ICPC contest registry generates separate routes with valid theory an
       `https://algotester.com/en/ArchiveProblem/${index < 6 ? 'DisplayWithEditor' : 'Display'}/${problem.archiveId}`,
     );
   });
+  const stage2025 = icpcContests.find(
+    (contest) => contest.slug === 'ukraine-2025-stage-2',
+  );
+  assert.ok(stage2025);
+  assert.deepEqual(
+    stage2025.problems.map((problem) => problem.archiveId),
+    Array.from({ length: 12 }, (_, i) => 81420 + i),
+  );
+  assert.deepEqual(
+    stage2025.problems.map((problem) => problem.letter),
+    'ABCDEFGHIJKL'.split(''),
+  );
+  stage2025.problems.forEach((problem) => {
+    assert.equal(
+      icpcSourceUrl(problem),
+      `https://algotester.com/uk/ArchiveProblem/Display/${problem.archiveId}`,
+    );
+  });
 });
 
 await test('every Foundation pattern has beginner preparation with C++ examples and two self-checks', () => {

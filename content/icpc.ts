@@ -1,6 +1,7 @@
 import type { ContentBlock } from '@/types/content';
 import { ukraine2025Contest } from '@/content/icpc/ukraine-2025-stage-1';
 import { ukraine2024Stage2Contest } from '@/content/icpc/ukraine-2024-stage-2';
+import { ukraine2025Stage2Contest } from '@/content/icpc/ukraine-2025-stage-2';
 
 export interface IcpcProblem {
   letter: string;
@@ -778,6 +779,7 @@ export const icpcContests = [
   { ...icpcContest, problems: icpcProblems },
   ukraine2025Contest,
   ukraine2024Stage2Contest,
+  ukraine2025Stage2Contest,
 ];
 export const icpcProblemHref = (
   problem: IcpcProblem,
