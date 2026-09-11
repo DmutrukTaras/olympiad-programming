@@ -25,6 +25,7 @@ import { AdvancedVisual } from '@/components/content/advanced-visuals';
 import { ChallengeVisual } from '@/components/content/challenge-visuals';
 import { FinalMixedSet } from '@/components/content/final-mixed-set';
 import { finalMixedSet } from '@/content/final-mixed-set';
+import { icpcContests, icpcProblemHref, icpcSourceUrl } from '@/content/icpc';
 import { complexityQuestions } from '@/content/complexity-questions';
 import { createComplexitySession } from '@/lib/complexity-trainer';
 import { buildTrainerCatalog, createTrainerSession } from '@/lib/trainer';
@@ -36,6 +37,40 @@ import type {
 
 const unique = (items: string[]) =>
   assert.equal(new Set(items).size, items.length);
+
+await test('ICPC contest registry generates separate routes with valid theory and source links', () => {
+  unique(icpcContests.map((contest) => contest.slug));
+  for (const contest of icpcContests) {
+    unique(contest.problems.map((problem) => problem.slug));
+    unique(contest.problems.map((problem) => problem.letter));
+    for (const problem of contest.problems) {
+      assert.equal(
+        icpcProblemHref(problem, contest.slug),
+        `/icpc/${contest.slug}/${problem.slug}`,
+      );
+      assert.equal(new URL(icpcSourceUrl(problem)).hostname, 'algotester.com');
+      assert.ok(
+        problem.sections.length >= 3 &&
+          problem.pitfalls.length &&
+          problem.complexity,
+      );
+      for (const pattern of problem.patterns) {
+        assert.ok(pattern.signal);
+        assert.ok(
+          patterns.some(
+            (item) => item.slug === pattern.theoryId && item.hasContent,
+          ),
+          pattern.theoryId,
+        );
+      }
+    }
+  }
+  assert.deepEqual(
+    icpcContests[0].problems.map((problem) => problem.archiveId),
+    Array.from({ length: 12 }, (_, i) => 71092 + i),
+  );
+});
+
 
 await test('every Foundation pattern has beginner preparation with C++ examples and two self-checks', () => {
   const foundation = patterns.filter(

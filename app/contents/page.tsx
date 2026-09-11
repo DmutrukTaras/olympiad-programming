@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import { ChapterList } from '@/components/content/chapter-list';
 import { ContentsExplorer } from '@/components/content/contents-explorer';
@@ -25,6 +26,18 @@ export default function ContentsPage() {
           побудову рішення. Далі оберіть зручний алгоритмічний маршрут.
         </p>
       </header>
+      <Link
+        href="/icpc"
+        className="mb-12 block rounded-2xl border border-primary/20 bg-primary/[0.05] p-6 transition-colors hover:border-primary"
+      >
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Розбір задач ICPC →
+        </h2>
+        <p className="mt-2 leading-7 text-muted-foreground">
+          Окремі добірки за змаганнями та етапами. Для кожної задачі —
+          пояснення, патерни й практика на Algotester.
+        </p>
+      </Link>
       <section
         aria-labelledby="introduction-heading"
         className="mb-14 sm:mb-16"

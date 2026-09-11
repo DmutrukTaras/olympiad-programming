@@ -43,8 +43,8 @@ export default function Home() {
               <span className="block text-primary"> алгоритм у задачі.</span>
             </h1>
             <p className="mt-8 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground sm:text-xl">
-              Не колекція готових алгоритмів, а послідовний шлях від умови
-              та обмежень до спостереження, патерну й надійної реалізації.
+              Не колекція готових алгоритмів, а послідовний шлях від умови та
+              обмежень до спостереження, патерну й надійної реалізації.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -72,7 +72,32 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="page-shell py-20 sm:py-28" aria-labelledby="learning-path-title">
+      <section className="page-shell pt-16">
+        <Link
+          href="/icpc"
+          className="group flex flex-col justify-between gap-5 rounded-2xl border border-primary/20 bg-primary/[0.05] p-6 transition-colors hover:border-primary sm:flex-row sm:items-center sm:p-8"
+        >
+          <div>
+            <p className="eyebrow">Змагальна практика</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Розбір задач ICPC
+            </h2>
+            <p className="mt-3 leading-7 text-muted-foreground">
+              Змагання та етапи, алгоритмічні патерни й окрема сторінка для
+              кожної задачі.
+            </p>
+          </div>
+          <ArrowRight
+            className="size-6 shrink-0 text-primary transition-transform group-hover:translate-x-1"
+            aria-hidden="true"
+          />
+        </Link>
+      </section>
+
+      <section
+        className="page-shell py-20 sm:py-28"
+        aria-labelledby="learning-path-title"
+      >
         <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <Reveal>
             <div className="lg:sticky lg:top-28">
@@ -100,7 +125,9 @@ export default function Home() {
                   <span className="font-mono text-xs text-muted-foreground">
                     {step.number}
                   </span>
-                  <h3 className="text-lg font-semibold tracking-tight">{step.title}</h3>
+                  <h3 className="text-lg font-semibold tracking-tight">
+                    {step.title}
+                  </h3>
                   <p className="leading-7 text-muted-foreground">{step.text}</p>
                 </article>
               </Reveal>

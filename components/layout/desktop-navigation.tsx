@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 const links = [
   { href: '/contents', label: 'Зміст' },
   { href: '/tasks', label: 'Задачі' },
+  { href: '/icpc', label: 'Розбір задач ICPC' },
   { href: '/trainer/pattern', label: 'Вгадай патерн' },
   { href: '/trainer/complexity', label: 'Визначте Big O' },
 ];
@@ -16,7 +17,7 @@ export function DesktopNavigation() {
 
   return (
     <nav
-      className="mr-3 hidden items-center gap-1 lg:flex"
+      className="mr-3 hidden items-center gap-1 xl:flex"
       aria-label="Основна навігація"
     >
       {links.map(({ href, label }) => {

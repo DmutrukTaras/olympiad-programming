@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 const links = [
   { href: '/contents', label: 'Зміст', icon: ListTree },
   { href: '/tasks', label: 'Задачі', icon: BookOpen },
+  { href: '/icpc', label: 'Розбір задач ICPC', icon: BookOpen },
   { href: '/trainer/pattern', label: 'Вгадай патерн', icon: Target },
   { href: '/trainer/complexity', label: 'Визначте Big O', icon: Gauge },
 ];
@@ -32,7 +33,7 @@ export function MobileNavigation() {
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full lg:hidden"
+            className="rounded-full xl:hidden"
           />
         }
       >
