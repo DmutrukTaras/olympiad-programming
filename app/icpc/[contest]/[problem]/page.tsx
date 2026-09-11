@@ -151,12 +151,6 @@ export default async function ProblemPage({
               blocks={[{ type: 'list', items: problem.pitfalls }]}
             />
           </section>
-          <aside className="mt-10 rounded-2xl bg-muted/60 p-5 text-sm leading-6 text-muted-foreground">
-            Розбір підготовлено на основі наданого короткого матеріалу з
-            доповненими поясненнями, псевдокодом і перевірками. Псевдокод описує
-            алгоритм; введення та виведення потрібно оформити відповідно до
-            оригінальної умови.
-          </aside>
           <section
             id="practice"
             className="mt-10 scroll-mt-28 rounded-2xl border border-primary/25 bg-primary/[0.06] p-6 sm:p-8"

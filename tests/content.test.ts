@@ -69,8 +69,19 @@ await test('ICPC contest registry generates separate routes with valid theory an
     icpcContests[0].problems.map((problem) => problem.archiveId),
     Array.from({ length: 12 }, (_, i) => 71092 + i),
   );
+  const contest2025 = icpcContests.find(
+    (contest) => contest.slug === 'ukraine-2025-stage-1',
+  );
+  assert.ok(contest2025);
+  assert.deepEqual(
+    contest2025.problems.map((problem) => problem.archiveId),
+    Array.from({ length: 13 }, (_, i) => 81392 + i),
+  );
+  assert.deepEqual(
+    contest2025.problems.map((problem) => problem.letter),
+    'ABCDEFGHIJKLM'.split(''),
+  );
 });
-
 
 await test('every Foundation pattern has beginner preparation with C++ examples and two self-checks', () => {
   const foundation = patterns.filter(

@@ -1,4 +1,5 @@
 import type { ContentBlock } from '@/types/content';
+import { ukraine2025Contest } from '@/content/icpc/ukraine-2025-stage-1';
 
 export interface IcpcProblem {
   letter: string;
@@ -771,7 +772,10 @@ export const icpcProblems: IcpcProblem[] = [
   },
 ];
 
-export const icpcContests = [{ ...icpcContest, problems: icpcProblems }];
+export const icpcContests = [
+  { ...icpcContest, problems: icpcProblems },
+  ukraine2025Contest,
+];
 export const icpcProblemHref = (
   problem: IcpcProblem,
   contestSlug = icpcContest.slug,
